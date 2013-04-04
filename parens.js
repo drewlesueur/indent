@@ -16,11 +16,13 @@ var parens = function (code) {
 
   pop_expr = function (indent_count, state) {
     while (indent_count < state.indent_count) {
-      indent_count += state.indent_stack.pop()
+      state.indent_count = state.indent_stack.pop()
+      if (indent_count == state.indent_count) break;
       var new_expr = state.expr
       var popped_expr = state.expr_stack.pop()
       var last_popped_expr = popped_expr[popped_expr.length - 1]
-      last_popped_expr.splice.apply(last_popped_expr, [last_popped_expr.length, 0,].concat(new_expr))
+      debugger
+      last_popped_expr.splice.apply(last_popped_expr, [last_popped_expr.length, 0].concat(new_expr))
       state.expr = popped_expr
     }
     return state;
@@ -48,12 +50,12 @@ var parens = function (code) {
   }
 
   state = pop_expr(0, state)
-
   return state.expr
 }
 
 
 //console.log(parens("say test\nother say"))
 //console.log(parens("say test\nother say\n  yo world\n  yo stuff"))
+//console.log(parens("say test\nother say\n  yo world\n  yo stuff\nok"))
 console.log(parens("say test\nother say\n  stuff here too\n  and here\n    but here\nback bere"))
 
