@@ -1,6 +1,6 @@
 var parens = function (code) {
   var lines = code.split("\n")
-  var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: [0]}
+  var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: []}
   var parse_line = function (line) {
     return line.split(/ +/) // for now, soon parse parens and simple dash based multi line strings
   }
@@ -16,14 +16,8 @@ var parens = function (code) {
 
   pop_expr = function (indent_count, state) {
     while (indent_count < state.indent_count) {
+      state.expr = state.expr_stack.pop()
       state.indent_count = state.indent_stack.pop()
-      if (indent_count == state.indent_count) break;
-      var new_expr = state.expr
-      var popped_expr = state.expr_stack.pop()
-      var last_popped_expr = popped_expr[popped_expr.length - 1]
-      debugger
-      last_popped_expr.splice.apply(last_popped_expr, [last_popped_expr.length, 0].concat(new_expr))
-      state.expr = popped_expr
     }
     return state;
   }
@@ -33,8 +27,10 @@ var parens = function (code) {
     var indent_count = get_indent_count(line)
     if (indent_count > state.indent_count) {
       state.expr_stack.push(state.expr) 
-      state.expr = []
-      state.indent_stack.push(indent_count)
+      state.expr = state.expr[state.expr.length - 1]
+      //state.expr = [] //alternate way 1
+      state.indent_stack.push(state.indent_count)
+      state.indent_count = indent_count
     } else {
       state = pop_expr(indent_count, state)
     }
@@ -50,6 +46,7 @@ var parens = function (code) {
   }
 
   state = pop_expr(0, state)
+
   return state.expr
 }
 
@@ -57,5 +54,10 @@ var parens = function (code) {
 //console.log(parens("say test\nother say"))
 //console.log(parens("say test\nother say\n  yo world\n  yo stuff"))
 //console.log(parens("say test\nother say\n  yo world\n  yo stuff\nok"))
-console.log(parens("say test\nother say\n  stuff here too\n  and here\n    but here\nback bere"))
+//console.log(parens("say test\nother say\n  stuff here too\n  and here\n    but here\nback bere"))
+//console.log(parens("say test\nother say\n  stuff here too\n  and here\n    but here\n  also here\nback bere"))
+//
+console.log(parens("say test\nother say\n  yo world\n    here too\n  yo stuff"))
+//console.log(parens("say test\nother say\n  yo world\n    here too"))
+
 
