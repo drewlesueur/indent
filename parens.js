@@ -1,8 +1,83 @@
 var parens = function (code) {
   var lines = code.split("\n")
   var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: []}
+  var escaped_words = {
+    n: "\n"
+    
+  }
+  var get_escaped_word = function (word) {
+    if (word in escaped_words) {
+      return escaped_words[word]
+    } else {
+      return word
+    }
+    // todo: \xabcd
+  }
+
+  //get_expected_word ; word
+    //geraldine  joaquine  
+
   var parse_line = function (line) {
-    return line.split(/ +/) // for now, soon parse parens and simple dash based multi line strings
+    //return line.split(/ +/) // for now, soon parse parens and simple dash based multi line strings
+    var line_state = {
+      i: 0,
+      line: line,
+      expr_stack: [],
+      expr: [],
+      word: "",
+      state: "normal",
+      backslash_word: ""
+    }
+    // sq - "
+    var step_line = function (line_state) {
+      var chr = line.substr(line_state.i)
+ 
+     if (line_state.state == "normal") {
+        if (chr == "(") {
+          line_state.expr_stack.push(line_state.expr)
+          line_state.expr = []
+        } else if (chr == ")") {
+          var expr = line_state.expr
+          line_state.expr = line_state.expr_stack.pop()
+          line_state.expr.push(expr)
+          
+        } else if (chr == " "){
+          line_state.expr.push(word)
+          line_state.word = ""
+        } else if (chr == "\""){
+          line_state.state = "quote"
+        } else {
+          line_state.word = line_state.word + chr
+        }
+      } else if (state == "quote") {
+        if (chr == "\\") {
+          line_state.state = "backslash"
+        } else if (chr == "\"") {
+          line_state.state = "normal"
+        } else {
+          line_state.word = line_state.word + chr
+        }
+      } else if (line_state.state == "backslash") {
+        if (chr == " ") {
+          line_state.word += get_escaped_word(line_state.backslash_word)
+          line_state.word += chr
+          line_state.backslash_word = ""
+          line_state.state = "quote"
+        } else if (chr == "\\") {
+           line_state.word += get_escaped_word(line_state.backslash_word)
+           line_state.backslash_word = ""
+        }
+      }
+    }
+    
+    var line_i = 0
+    while (line_i < line.length) {
+      line_state.i = line_i
+      line_state = step_line(line_state)
+    }
+    
+    return line_state.expr
+  
   }
 
 	var get_indent_count = function (line) {
