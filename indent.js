@@ -18,7 +18,7 @@ var parens = function (code) {
     //geraldine  joaquine  
 
   var parse_line = function (line) {
-    //return line.split(/ +/) // for now, soon parse parens and simple dash based multi line strings
+    return line.split(/ +/) // for now, soon parse parens and simple dash based multi line strings
     var line_state = {
       i: 0,
       line: line,
@@ -42,7 +42,7 @@ var parens = function (code) {
           line_state.expr.push(expr)
           
         } else if (chr == " "){
-          line_state.expr.push(word)
+          line_state.expr.push(state.word)
           line_state.word = ""
         } else if (chr == "\""){
           line_state.state = "quote"
