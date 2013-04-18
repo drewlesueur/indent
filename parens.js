@@ -2,6 +2,13 @@ var parens = function (code) {
   var i = 0
   var state = {chr: "", word: "", stack: [], expr: [], mode: "normal", string_parens: 0}
   var string_symbol = "$"; //this could change
+  var close_word = function (state) {
+    if (state.word.length) {
+      state.expr.push(state.word)
+      state.word = ""
+    }
+    return state;
+  }
   var step = function (state) {
     var chr = state.chr
     if (state.mode == "normal") {
@@ -14,14 +21,12 @@ var parens = function (code) {
           state.string_parens = 0
         }
       } else if (chr == ")") {
+        state = close_word(state)
         var expr = state.expr
         state.expr = state.stack.pop()
         state.expr.push(expr)
       } else if (chr == " ") {
-        if (state.word.length) {
-          state.expr.push(state.word)
-          state.word = ""
-        }
+        state = close_word(state)
       } else {
         state.word += chr
       }
@@ -54,7 +59,7 @@ var parens = function (code) {
 }
 
 
-console.log(parens("hello world"))
-console.log(parens("(hello world)"))
-console.log(parens("(hello (this is a) (cool message (what ever)))"))
-console.log(parens("(name $(My name is drew lesueur))"))
+console.log(JSON.stringify(parens("hello world")))
+console.log(JSON.stringify(parens("(hello world)")))
+console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))")))
+console.log(JSON.stringify(parens("(name $(My name is drew lesueur))")))
