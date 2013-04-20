@@ -16,5 +16,10 @@ var de = function (a, b, c) {
 de(parens("hello world"), ["hello","world"], "test simple parens")
 de(parens("(hello world)"), [["hello","world"]], "test simple parens 2")
 de(parens("(hello world (some cool) things ((in here) yo))"), [["hello","world",["some","cool"],"things",[["in","here"],"yo"]]] , "test simple parens 2")
+
+de(parens("hello world", true), ["hello",["world",[]]], "test simple parens linked list")
+de(parens("(hello world (some cool) things ((in here) yo))", true), 
+		[["hello",["world",[["some",["cool",[]]],["things",[[["in",["here",[]]],["yo",[]]],[]]]]]],[]] ,
+		"test simple parens 2")
 //de(false, true)
 
