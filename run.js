@@ -62,3 +62,10 @@ var parens = function (code) {
 //console.log(JSON.stringify(parens("(hello world)")))
 //console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))")))
 //console.log(JSON.stringify(parens("(name $(My name is drew lesueur))")))
+var lambda_compile = function (raw_code) {
+  code = parens(raw_code)
+}
+
+console.log(lambda_compile("-x x"))
+
+
