@@ -36,7 +36,7 @@ var K = (function () {
 })
 */
 
-//console.log(lambda_compile("(-x x) 1"))
+console.log(lambda_compile("(-x x) 1"))
 //console.log(lambda_compile("(-x x) $(yo world)"))
 //console.log(lambda_compile("(-x -y y) 1 0"))
 
