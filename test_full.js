@@ -1,3 +1,89 @@
+var parens = function (code, linked_list) {
+
+  var is_array = function (a) {
+    return Object.prototype.toString.call(a) === '[object Array]'
+  }
+  var to_linked_list = function (list, index) {
+    index = index || 0
+    if (index >= list.length) {
+      return [];
+    }
+    var item = list[index]
+    if (is_array(item)) {
+      item = to_linked_list(item, 0)
+    }
+    return [item, to_linked_list(list, index + 1)] 
+  }
+
+  var i = 0
+  var state = {chr: "", word: "", stack: [], expr: [], mode: "normal", string_parens: 0}
+  var string_symbol = "$"; //this could change
+  var close_word = function (state) {
+    if (state.word.length) {
+      state.expr.push(state.word)
+      state.word = ""
+    }
+    return state;
+  }
+  var step = function (state) {
+    var chr = state.chr
+    if (state.mode == "normal") {
+      if (chr == "(") {
+        state.stack.push(state.expr)
+        state.expr = []
+        if (state.word == string_symbol) {
+          state.word = "";
+          state.mode = "string";
+          state.string_parens = 0
+        }
+      } else if (chr == ")") {
+        state = close_word(state)
+        var expr = state.expr
+        state.expr = state.stack.pop()
+        state.expr.push(expr)
+      } else if (chr == " ") {
+        state = close_word(state)
+      } else {
+        state.word += chr
+      }
+    } else if (state.mode == "string") {
+      if (chr == "(") {
+        state.string_parens += 1
+      } else if (chr == ")") {
+        state.string_parens -= 1
+        if (state.string_parens < 0) {
+          state.expr.push(state.word)
+          state.word = ""
+          state.mode = "normal"
+          return state;
+        }
+      }
+      state.word += chr
+    }
+    return state;
+  }
+
+  while (i < code.length) {
+    state.chr = code[i]
+    state = step(state)
+    i += 1
+  }
+  state.chr = " "
+  state = step(state)
+  
+  if (linked_list) {
+    return to_linked_list(state.expr)
+  } else {
+    return state.expr
+  }  
+}
+
+
+console.log(JSON.stringify(parens("hello world", true)))
+console.log(JSON.stringify(parens("(hello worldi)")))
+console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))")))
+console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))", true)))
+//console.log(JSON.stringify(parens("(name $(My name is drew lesueur))")))
 var indent = function (code) {
   var lines = code.split("\n")
   var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: []}
@@ -135,4 +221,68 @@ var indent = function (code) {
 console.log(indent("say test\nother say\n  yo world\n    here too\n  yo stuff"))
 //console.log(parens("say test\nother say\n  yo world\n    here too"))
 
+
+var lambda_compile = function (raw_code) {
+  // lambda parens doesn't mean call a funciton
+  // passing a parameter does?
+  code = parens(raw_code) 
+}
+
+var is_array = function (a) {
+  return Object.prototype.toString.call(a) === '[object Array]'
+}
+
+
+
+/*
+var I = (function () {
+  var arg = {
+    value: "tmp_value",
+    type: "arg"
+  }
+  return {
+    arg: arg,
+    body: [arg],
+    type: "lambda"
+  }
+})()
+
+var K = (function () {
+  var arg = {
+    value: "tmp_value",
+    type: "arg"
+  }
+  return {
+    arg: arg,
+    body: [],
+    type: "lambda"
+  }
+})
+*/
+
+console.log(lambda_compile("(-x x) 1"))
+//console.log(lambda_compile("(-x x) $(yo world)"))
+//console.log(lambda_compile("(-x -y y) 1 0"))
+
+//var stuff = (S (I (y z)))
+//var other = (-x (x (x (x x))))
+var assert = require("assert")
+
+var e = function (a, b, c) { assert.equal(a, b, c) }
+var de = function (a, b, c) { 
+  try {
+    assert.deepEqual(a, b, c) 
+  } catch (e) {
+    console.log(e)
+    console.log("Actual..")
+    console.log(JSON.stringify(e.actual))
+    process.exit(1)
+  }
+}
+
+
+de(parens("hello world"), ["hello","world"], "test simple parens")
+de(parens("(hello world)"), [["hello","world"]], "test simple parens 2")
+de(parens("(hello world (some cool) things ((in here) yo))"), [["hello","world",["some","cool"],"things",[["in","here"],"yo"]]] , "test simple parens 2")
+//de(false, true)
 

@@ -80,7 +80,7 @@ var parens = function (code, linked_list) {
 
 
 console.log(JSON.stringify(parens("hello world", true)))
-console.log(JSON.stringify(parens("(hello worldi)", true)))
+console.log(JSON.stringify(parens("(hello worldi)")))
 console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))")))
 console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))", true)))
 //console.log(JSON.stringify(parens("(name $(My name is drew lesueur))")))
