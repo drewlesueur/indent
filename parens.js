@@ -1,4 +1,20 @@
-var parens = function (code) {
+var parens = function (code, linked_list) {
+
+  var is_array = function (a) {
+    return Object.prototype.toString.call(a) === '[object Array]'
+  }
+  var to_linked_list = function (list, index) {
+    index = index || 0
+    if (index >= list.length) {
+      return [];
+    }
+    var item = list[index]
+    if (is_array(item)) {
+      item = to_linked_list(item, 0)
+    }
+    return [item, to_linked_list(list, index + 1)] 
+  }
+
   var i = 0
   var state = {chr: "", word: "", stack: [], expr: [], mode: "normal", string_parens: 0}
   var string_symbol = "$"; //this could change
@@ -54,11 +70,17 @@ var parens = function (code) {
   }
   state.chr = " "
   state = step(state)
-  return state.expr
+  
+  if (linked_list) {
+    return to_linked_list(state.expr)
+  } else {
+    return state.expr
+  }  
 }
 
 
-//console.log(JSON.stringify(parens("hello world")))
-//console.log(JSON.stringify(parens("(hello world)")))
-//console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))")))
+console.log(JSON.stringify(parens("hello world", true)))
+console.log(JSON.stringify(parens("(hello worldi)", true)))
+console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))")))
+console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))", true)))
 //console.log(JSON.stringify(parens("(name $(My name is drew lesueur))")))

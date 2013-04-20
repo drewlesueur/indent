@@ -8,17 +8,6 @@ var is_array = function (a) {
   return Object.prototype.toString.call(a) === '[object Array]'
 }
 
-var to_linked_list = function (list, index) {
-  index = index || 0
-  if (index >= list.length) {
-    return null;
-  }
-  var item = list[index]
-  if (is_array(item)) {
-    item = to_linked_list(item, 0)
-  }
-  return [item, to_linked_list(list, index + 1)] 
-}
 
 
 /*
