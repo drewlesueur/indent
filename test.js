@@ -21,5 +21,30 @@ de(parens("hello world", true), ["hello",["world",[]]], "test simple parens link
 de(parens("(hello world (some cool) things ((in here) yo))", true), 
 		[["hello",["world",[["some",["cool",[]]],["things",[[["in",["here",[]]],["yo",[]]],[]]]]]],[]] ,
 		"test simple parens 2")
+
+de(parens("(-x x) 20", true), [["-x",["x",[]]],["20",[]]],  "lambda")
+de(parens("-x x 20", true), ["-x",["x",["20",[]]]],  "lambda")
+de(parens("-x -y -z (x y z) true Drew Aimee", true),
+["-x",["-y",["-z",[["x",["y",["z",[]]]],["true",["Drew",["Aimee",[]]]]]]]]		
+, "true false")// -x -y -z (x y z) true Drew Aimee
+
+//should these be the same thing?
+//parens dont nec. mean function call?
+//lambda("-x x 20")
+//lambda("-x (x) 20")
+//lambda("(-x x) 20")
+//lambda("(-x x 20)")
+//
+// -x -y -z (x y z) true Drew Aimee
+
+// fn x fn y fn z (x y z) true Drew Aimee
+// K -x -y x
+// I -x x
+// KI -y -x x
+
+
+
+
+
 //de(false, true)
 

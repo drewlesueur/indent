@@ -222,14 +222,36 @@ console.log(indent("say test\nother say\n  yo world\n    here too\n  yo stuff"))
 //console.log(parens("say test\nother say\n  yo world\n    here too"))
 
 
+// parens don't nec. mean function call
 var lambda_compile = function (raw_code) {
   // lambda parens doesn't mean call a funciton
   // passing a parameter does?
-  code = parens(raw_code) 
-}
+	
+	var is_array = function (a) {
+		return Object.prototype.toString.call(a) === '[object Array]'
+	}
 
-var is_array = function (a) {
-  return Object.prototype.toString.call(a) === '[object Array]'
+	var is_function_create = function (expr) {
+		return expr.substr(0, 1) == "-"
+	}
+
+	var function_creator = function (varName) {
+		return function () {
+		
+		}	
+	}
+	
+	// todo: first cache all the names
+  code = parens(raw_code, true) 
+	var the_left;
+	for (var i = 0; i < 1000; i++) {
+	// while (true) {
+		var the_first = code[0]
+		//if (is_array ...
+		if (is_function_create(the_first)) {
+			the_left = function_creator(the_first.substr(1))			
+		}
+	}		
 }
 
 
@@ -260,7 +282,7 @@ var K = (function () {
 })
 */
 
-console.log(lambda_compile("(-x x) 1"))
+//console.log(lambda_compile("(-x x) 1"))
 //console.log(lambda_compile("(-x x) $(yo world)"))
 //console.log(lambda_compile("(-x -y y) 1 0"))
 
