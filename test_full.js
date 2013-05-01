@@ -222,7 +222,7 @@ console.log(indent("say test\nother say\n  yo world\n    here too\n  yo stuff"))
 //console.log(parens("say test\nother say\n  yo world\n    here too"))
 
 
-var lambda_compile = function (raw_code) {
+  var lambda_compile = function (raw_code) {
   // lambda parens doesn't mean call a funciton
   // passing a parameter does?
   code = parens(raw_code) 
@@ -266,6 +266,24 @@ console.log(lambda_compile("(-x x) 1"))
 
 //var stuff = (S (I (y z)))
 //var other = (-x (x (x (x x))))
+
+/*
+
+game dict
+  set p_x 0
+  set b_x 0
+  set b_y 0
+  set time 0
+
+//game dict ...
+
+on_tick -game -time
+  
+
+  
+  
+
+*/
 var assert = require("assert")
 
 var e = function (a, b, c) { assert.equal(a, b, c) }

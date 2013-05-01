@@ -1,4 +1,4 @@
-var lambda_compile = function (raw_code) {
+  var lambda_compile = function (raw_code) {
   // lambda parens doesn't mean call a funciton
   // passing a parameter does?
   code = parens(raw_code) 
@@ -42,3 +42,21 @@ console.log(lambda_compile("(-x x) 1"))
 
 //var stuff = (S (I (y z)))
 //var other = (-x (x (x (x x))))
+
+/*
+
+game dict
+  set p_x 0
+  set b_x 0
+  set b_y 0
+  set time 0
+
+//game dict ...
+
+on_tick -game -time
+  
+
+  
+  
+
+*/
