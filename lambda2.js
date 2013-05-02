@@ -6,7 +6,7 @@ var lambda = function (raw_code) {
   var code = parens(raw_code, true)
   code = code[0] //dewrap the first parens, for now.
   console.log("the code is " + code)
-  // soon yoy should make the other ones macros
+  // soon you should make the other ones macros
 
   var state = {
     code: code,

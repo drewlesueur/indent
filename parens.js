@@ -5,14 +5,18 @@ var parens = function (code, linked_list) {
   }
   var to_linked_list = function (list, index) {
     index = index || 0
-    if (index >= list.length) {
-      return [];
-    }
     var item = list[index]
     if (is_array(item)) {
       item = to_linked_list(item, 0)
     }
-    return [item, to_linked_list(list, index + 1)] 
+
+    if (index + 1 >= list.length) {
+      return [item];
+    } else {
+      var next = to_linked_list(list, index + 1)
+      if (next.length == 1) { next = next[0] }
+      return [item, next] 
+    }
   }
 
   var i = 0

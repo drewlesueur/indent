@@ -5,14 +5,18 @@ var parens = function (code, linked_list) {
   }
   var to_linked_list = function (list, index) {
     index = index || 0
-    if (index >= list.length) {
-      return [];
-    }
     var item = list[index]
     if (is_array(item)) {
       item = to_linked_list(item, 0)
     }
-    return [item, to_linked_list(list, index + 1)] 
+
+    if (index + 1 >= list.length) {
+      return [item];
+    } else {
+      var next = to_linked_list(list, index + 1)
+      if (next.length == 1) { next = next[0] }
+      return [item, next] 
+    }
   }
 
   var i = 0
@@ -230,7 +234,7 @@ var lambda = function (raw_code) {
   var code = parens(raw_code, true)
   code = code[0] //dewrap the first parens, for now.
   console.log("the code is " + code)
-  // soon yoy should make the other ones macros
+  // soon you should make the other ones macros
 
   var state = {
     code: code,
@@ -284,7 +288,14 @@ de(parens("hello world"), ["hello","world"], "test simple parens")
 de(parens("(hello world)"), [["hello","world"]], "test simple parens 2")
 de(parens("(hello world (some cool) things ((in here) yo))"), [["hello","world",["some","cool"],"things",[["in","here"],"yo"]]] , "test simple parens 2")
 
-de(parens("hello world", true), ["hello",["world",[]]], "test simple parens linked list")
+de(parens("hello world", true), ["hello","world"], "test simple parens linked list")
+
+de(parens("one", true), ["one"], "test simple parens linked list")
+de(parens("(one two)", true), [["one", "two"]], "test simple parens linked list")
+de(parens("one two", true), ["one", "two"], "test simple parens linked list")
+de(parens("(one two three)", true), [["one", ["two", "three"]]], "test simple parens linked list")
+de(parens("one two three", true), ["one", ["two", "three"]], "test simple parens linked list")
+/*
 de(parens("(hello world (some cool) things ((in here) yo))", true), 
 		[["hello",["world",[["some",["cool",[]]],["things",[[["in",["here",[]]],["yo",[]]],[]]]]]],[]] ,
 		"test simple parens 2")
@@ -296,7 +307,8 @@ de(parens("-x -y -z (x y z) true Drew Aimee", true),
 , "true false")// -x -y -z (x y z) true Drew Aimee
 
 de(lambda("x"), "x", "simplest lambda")
-
+de(lambda("(x y)"), "(x,y)", "fake test for function application")
+*/
 //should these be the same thing?
 //parens dont nec. mean function call?
 //lambda("-x x 20")

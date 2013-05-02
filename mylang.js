@@ -5,14 +5,18 @@ var parens = function (code, linked_list) {
   }
   var to_linked_list = function (list, index) {
     index = index || 0
-    if (index >= list.length) {
-      return [];
-    }
     var item = list[index]
     if (is_array(item)) {
       item = to_linked_list(item, 0)
     }
-    return [item, to_linked_list(list, index + 1)] 
+
+    if (index + 1 >= list.length) {
+      return [item];
+    } else {
+      var next = to_linked_list(list, index + 1)
+      if (next.length == 1) { next = next[0] }
+      return [item, next] 
+    }
   }
 
   var i = 0
@@ -230,7 +234,7 @@ var lambda = function (raw_code) {
   var code = parens(raw_code, true)
   code = code[0] //dewrap the first parens, for now.
   console.log("the code is " + code)
-  // soon yoy should make the other ones macros
+  // soon you should make the other ones macros
 
   var state = {
     code: code,
