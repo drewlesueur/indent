@@ -295,20 +295,19 @@ de(parens("(one two)", true), [["one", "two"]], "test simple parens linked list"
 de(parens("one two", true), ["one", "two"], "test simple parens linked list")
 de(parens("(one two three)", true), [["one", ["two", "three"]]], "test simple parens linked list")
 de(parens("one two three", true), ["one", ["two", "three"]], "test simple parens linked list")
-/*
 de(parens("(hello world (some cool) things ((in here) yo))", true), 
-		[["hello",["world",[["some",["cool",[]]],["things",[[["in",["here",[]]],["yo",[]]],[]]]]]],[]] ,
+    [["hello",["world",[["some","cool"],["things",[["in","here"],"yo"]]]]]],
 		"test simple parens 2")
 
-de(parens("(-x x) 20", true), [["-x",["x",[]]],["20",[]]],  "lambda")
-de(parens("-x x 20", true), ["-x",["x",["20",[]]]],  "lambda")
+de(parens("(-x x) 20", true), [["-x","x"],"20"],  "lambda")
+de(parens("-x x 20", true), ["-x",["x","20"]],  "lambda")
 de(parens("-x -y -z (x y z) true Drew Aimee", true),
-["-x",["-y",["-z",[["x",["y",["z",[]]]],["true",["Drew",["Aimee",[]]]]]]]]		
+["-x",["-y",["-z",[["x",["y", "z"]],["true",["Drew","Aimee"]]]]]]		
 , "true false")// -x -y -z (x y z) true Drew Aimee
 
 de(lambda("x"), "x", "simplest lambda")
 de(lambda("(x y)"), "(x,y)", "fake test for function application")
-*/
+
 //should these be the same thing?
 //parens dont nec. mean function call?
 //lambda("-x x 20")
