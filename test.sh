@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "hello world"
-cat parens.js indent.js lambda.js > mylang.js
+cat parens.js indent.js lambda2.js > mylang.js
 cat mylang.js test.js > test_full.js
 node test_full.js
 

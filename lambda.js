@@ -31,7 +31,6 @@ var lambda_compile = function (raw_code) {
 		// not that it's bad (i'm using it in parens.) Just trying 
 		// a different way. Might be better
 		parent: null
-
 	}
 
 	var step_eval = function (state) {
@@ -73,7 +72,7 @@ var K = (function () {
   }
   return {
     arg: arg,
-    body: [],
+    body: "-y x",
     type: "lambda"
   }
 })
@@ -85,6 +84,8 @@ var K = (function () {
 
 //var stuff = (S (I (y z)))
 //var other = (-x (x (x (x x))))
+//
+// (-x x) y
 
 /*
 

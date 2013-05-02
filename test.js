@@ -28,6 +28,8 @@ de(parens("-x -y -z (x y z) true Drew Aimee", true),
 ["-x",["-y",["-z",[["x",["y",["z",[]]]],["true",["Drew",["Aimee",[]]]]]]]]		
 , "true false")// -x -y -z (x y z) true Drew Aimee
 
+de(lambda("x"), "x", "simplest lambda")
+
 //should these be the same thing?
 //parens dont nec. mean function call?
 //lambda("-x x 20")
