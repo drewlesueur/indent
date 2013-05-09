@@ -307,6 +307,7 @@ de(parens("-x -y -z (x y z) true Drew Aimee", true),
 
 de(lambda("x"), "x", "simplest lambda")
 de(lambda("(x y)"), "(x,y)", "fake test for function application")
+de(lambda("((x z f (d i) o) y)"), "()", "fake test for function application")
 
 //should these be the same thing?
 //parens dont nec. mean function call?
