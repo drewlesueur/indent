@@ -44,19 +44,25 @@ var f6 = function (/*fn, args*/) {
 		}
 	} else {
 		ret = function () {
-			//todo: cache this sometime
-			if (_.isFunction(fn)) {
-				return fn.apply(null, args)
-			} else {
-				if (_.isString(args[0])) {
-					args[0] = f6[args[0]]
-				}
-				return args[0].apply(null, [fn].concat(args.slice(1)))
+			var len = ret.fn.length
+			var neededArgs = ret.args.slice(0, len) 
+			var leftOver = ret.args.slice(len) 
+			var returnValue = ret.fn.apply(null, neededArgs)
+			if (leftOver.length) {
+				returnValue = f6.apply(null,[returnValue].concat(leftOver)).value()	
 			}
+			return returnValue;
+			//todo: cache this sometime
 		}
+		if (_.isFunction(fn)) {
+			ret.fn = fn
+			ret.args = args
+		} else {
+			ret.fn = args[0]
+			ret.args = [fn].concat(args.slice(1))
+		}
+
 		ret.input = f6()
-		ret.fn = fn
-		ret.args = args
 		// prevent too much binding?
 		f6.actuallyDoTheBinding(ret.input, ret, ret)
 		ret.listen = function (fn) {
@@ -126,6 +132,3 @@ f6.concat = function (a, b) {
 f6.substr = function (str, start, len) {
 	return f6.value(str).substr(f6.value(start), f6.value(len))
 }
-
-
-

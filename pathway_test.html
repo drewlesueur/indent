@@ -48,5 +48,12 @@ asserte(theNew, 42, "nested listen")
 theName = f6("Drew", f6.substr, 0, 2)
 asserte(theName(), "Dr", "fake polymorphism")
 
+theName = f6("Drew LeSueur", f6.substr, 5, 7, f6.substr, 0, 3)
+asserte(theName(), "LeS", "super curry")
+
+theName = f6("Drew LeSueur", f6.substr, 5, 7, f6.substr, 0, 3, f6.substr, 2)
+asserte(theName(), "S", "super curry2")
+
+//theName = f6(f6.substr, "Drew")
 
 </script>
