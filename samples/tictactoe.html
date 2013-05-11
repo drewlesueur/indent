@@ -1,0 +1,54 @@
+<script src="zepto.min.js"></script>
+<script src="underscore-min.js"></script>
+<script src="pathway.js"></script>
+<style>
+	.tic-tac-toe td{
+		width: 106px;	
+		height: 106px;	
+	}
+	.tic-tac-toe {
+		border-collapse: collapse;
+		border: none;
+	}
+
+	#c1 {
+		border: 1px solid black;
+		border-width: 0 1px 1px 1px;
+	}
+
+	#c3 {
+		border: 1px solid black;
+		border-width: 1px 1px 1px 0;
+	}
+
+	#c5 {
+		border: 1px solid black;
+		border-width: 1px 0 1px 1px;
+	}
+
+	#c7 {
+		border: 1px solid black;
+		border-width: 1px 1px 0 1px;
+	}
+
+</style>
+
+
+<table class="tic-tac-toe">
+	<tr> <td id=c0></td> <td id=c1></td> <td id=c2></td> </tr>
+	<tr> <td id=c3></td> <td id=c4></td> <td id=c5></td> </tr>
+	<tr> <td id=c6></td> <td id=c7></td> <td id=c8></td> </tr>
+</table>
+
+
+<script>
+var touches = f6([])
+var plays = f6(touches, map, getQuadrant)
+$(document).on("click", touches.push)
+//$(document).tap(touches.push)
+
+
+
+
+</script>
+

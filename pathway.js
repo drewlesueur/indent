@@ -5,59 +5,127 @@
 // i would just implement a lazy calling strategy
 
 
-var f5 = function () {
+var __slice = [].slice
 
+var f6 = function (/*fn, args*/) {
+	var args, fn;
+	fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+	//todo currying so you can keep going	
+	//pretend polymorphic
+	// caching
+	// binding and iffs?
+
+	var ret;
+	if (!args.length) {
+		ret = function (newValue) {
+			if (arguments.length) {
+				var oldValue = ret._value	
+				ret._value = newValue
+				//trigger
+				_.each(ret.listeners, function (listener) {
+					listener(newValue, oldValue, ret);
+				})
+				return ret
+			} else {
+				return ret._value
+			}
+		}
+		ret._value = fn
+		ret.listeners = []
+		ret.listen = function (fn) {
+			ret.listeners.push(fn)	
+		}
+		//test this
+		ret.push = function (x) {
+			ret._value.push(x)	
+			_.each(ret.listeners, function (listener) {
+				listener(newValue, oldValue, x, ret);
+			})
+		}
+	} else {
+		ret = function () {
+			//todo: cache this sometime
+			if (_.isFunction(fn)) {
+				return fn.apply(null, args)
+			} else {
+				if (_.isString(args[0])) {
+					args[0] = f6[args[0]]
+				}
+				return args[0].apply(null, [fn].concat(args.slice(1)))
+			}
+		}
+		ret.input = f6()
+		ret.fn = fn
+		ret.args = args
+		// prevent too much binding?
+		f6.actuallyDoTheBinding(ret.input, ret, ret)
+		ret.listen = function (fn) {
+			ret.input.listeners.push(fn)	
+		}
+	}
+	ret.isf6ed = true;
+	if (args.length) {
+		ret.isFn = true;
+		ret.value = ret;
+	} else {
+		ret.isFn = false;
+		ret.value = ret;
+	}
+	return ret;
 }
-//
 
 
-var add = function (a, b) {
-  return a + b;
+f6.add = function (a, b) {
+	return f6.value(a) + f6.value(b)
 }
 
-
-
-var lazy = function(fn) {
-  fn.isLazy = true;
-  return function (a) {
-    return function () {
-      fn(a)
-    }
-  }
-};
-
-var isScalar = function (item) {
-    var type = typeof item;
-    return type === 'string' || type === 'number' || type === 'boolean';
+f6.lessThan = function (a, b) {
+	return f6.value(a) < f6.value(b)
 }
 
-var lazyEval = function (a) {
-  if (isScalar(a)) {
-    return a
-  } else if (a.isLazy) {
-    return a()
-  } else {
-    return a;
-  }
+f6.isf6ed = function (a) {
+	return _.isObject(a) && a.isf6ed
 }
 
-var f4 = {
-  add: lazy(function (a) { return function (b) {
-    return lazyEval(a) + lazyEval(b)
-  }}),
-  identity: lazy(function (a) {
-    return lazyEval(a)
-  }),
-  ifyo: lazy(function (a) { return lazy(function (b) { return lazy(function (c) {
-    if (lazyEval(a)) {
-      lazyEval(b)
-    } else {
-      lazyEval(c)
-    }
-  })})})
+f6.value = function (a) {
+	if (f6.isf6ed(a)) {
+		return a.value()
+	} else {
+		return a	
+	}
 }
 
-console.log(f4.add(1)(2))
+f6.if6 = function (a, b, c) {
+	if (f6.value(a)) {
+		return f6.value(b)
+	} else {
+		return f6.value(c)
+	}
+} 
+
+f6.actuallyDoTheBinding = function (input, outerExp, innerExp) {
+	//todo: don't bind all, just the ones you know you use. think of an if statement
+	_.each(innerExp.args, function (arg) {
+		if (f6.isf6ed(arg)) {
+			if (!arg.isFn) {
+				arg.listen(function (newValue, oldValue, argInput) {
+					var inputValue = f6.value(outerExp)
+					input(inputValue) //should I wrap it? 	
+				})
+			} else {
+				f6.actuallyDoTheBinding(input, outerExp, arg);
+			}
+		}
+	})				
+}
+
+f6.concat = function (a, b) {
+	return f6.value(a).toString() + f6.value(b).toString()
+}
+
+f6.substr = function (str, start, len) {
+	return f6.value(str).substr(f6.value(start), f6.value(len))
+}
 
 
 

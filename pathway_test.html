@@ -1,0 +1,52 @@
+<script src="simpletest.js"></script>
+<script src="underscore-min.js"></script>
+<script src="pathway.js"></script>
+<script>
+var shouldntGetHere = function () {
+	alert("test failed")	
+}
+info("")
+var lessThan = f6.lessThan
+x = f6(20)
+asserte(x(), 20, "f6 simple")
+p1 = f6(f6.add, x, 1)
+asserte(p1(), 21, "f6 call")
+
+
+answer = f6(f6.if6(true, f6(f6.add, 1, 2), f6(shouldntGetHere, 1)))
+asserte(answer(), 3, "if lazyness")
+
+x(30)
+asserte(p1(), 31, "check change")
+
+var theNew = null
+var theOld = null
+p1.listen(function (newValue, oldValue) {
+	theNew = newValue	
+	theOld = oldValue	
+})
+x(70)
+asserte(theNew, 71, "listening")
+
+nestedPlus1 = f6(f6.add, 1, f6(f6.add, 1, x))
+var theNew = null
+nestedPlus1.listen(function (newValue) {
+	theNew = newValue
+})
+x(40)
+asserte(theNew, 42, "nested listen")
+
+//isLow = f6(f6.if6, f6(lessThan, x, 100), true, f6(shouldntGetHere, 1) )
+//isLow = f6(if5, f6(x, lessThan, 100), true, f6(shouldntGetHere, 1) )
+
+
+//names = ["drew", "Aimee", "fred", "tom"]
+//hellos = f6(names, f6.map, f6(f6.concat, "hello "))
+//concat hello
+//plays = touches map getQuadrant minusDoubles
+
+theName = f6("Drew", f6.substr, 0, 2)
+asserte(theName(), "Dr", "fake polymorphism")
+
+
+</script>
