@@ -6,14 +6,14 @@ var shouldntGetHere = function () {
 	alert("test failed")	
 }
 info("")
-var lessThan = f6.lessThan
-x = f6(20)
-asserte(x(), 20, "f6 simple")
-p1 = f6(f6.add, x, 1)
-asserte(p1(), 21, "f6 call")
+var frLessThan = fr.lessThan, frAdd = fr.add, frIf = fr.iff, frSubstr = fr.substr
+x = fr(20)
+asserte(x(), 20, "fr simple")
+p1 = fr(frAdd, x, 1)
+asserte(p1(), 21, "fr call")
 
 
-answer = f6(f6.if6(true, f6(f6.add, 1, 2), f6(shouldntGetHere, 1)))
+answer = fr(frIf(true, fr(frAdd, 1, 2), fr(shouldntGetHere, 1)))
 asserte(answer(), 3, "if lazyness")
 
 x(30)
@@ -28,7 +28,7 @@ p1.listen(function (newValue, oldValue) {
 x(70)
 asserte(theNew, 71, "listening")
 
-nestedPlus1 = f6(f6.add, 1, f6(f6.add, 1, x))
+nestedPlus1 = fr(frAdd, 1, fr(frAdd, 1, x))
 var theNew = null
 nestedPlus1.listen(function (newValue) {
 	theNew = newValue
@@ -36,24 +36,36 @@ nestedPlus1.listen(function (newValue) {
 x(40)
 asserte(theNew, 42, "nested listen")
 
-//isLow = f6(f6.if6, f6(lessThan, x, 100), true, f6(shouldntGetHere, 1) )
-//isLow = f6(if5, f6(x, lessThan, 100), true, f6(shouldntGetHere, 1) )
+//isLow = fr(fr.ifr, fr(lessThan, x, 100), true, fr(shouldntGetHere, 1) )
+//isLow = fr(if5, fr(x, lessThan, 100), true, fr(shouldntGetHere, 1) )
 
 
-//names = ["drew", "Aimee", "fred", "tom"]
-//hellos = f6(names, f6.map, f6(f6.concat, "hello "))
+//theName = fr(fr.substr, "Drew")
 //concat hello
 //plays = touches map getQuadrant minusDoubles
 
-theName = f6("Drew", f6.substr, 0, 2)
+theName = fr("Drew", frSubstr, 0, 2)
 asserte(theName(), "Dr", "fake polymorphism")
 
-theName = f6("Drew LeSueur", f6.substr, 5, 7, f6.substr, 0, 3)
+theName = fr("Drew LeSueur", frSubstr, 5, 7, frSubstr, 0, 3)
 asserte(theName(), "LeS", "super curry")
 
-theName = f6("Drew LeSueur", f6.substr, 5, 7, f6.substr, 0, 3, f6.substr, 2)
+theName = fr("Drew LeSueur", frSubstr, 5, 7, frSubstr, 0, 3, frSubstr, 2)
 asserte(theName(), "S", "super curry2")
 
-//theName = f6(f6.substr, "Drew")
+//hellos = fr(names, fr.map, fr(fr.concat, "hello "))
+//asserte(hellos(), ["hello drew"])
+
+/*
+names = fr(frList, "drew", "lesueur")
+firstName = fr(names, 0)
+
+friends = fr(frDict, "drew", "volley", "aimee", "decorating")
+aimeeFriend = fr(friends, frGet, "aimee")
+*/
+
+
+
+//hellos = fr(names, frMap, )
 
 </script>

@@ -7,7 +7,7 @@
 
 var __slice = [].slice
 
-var f6 = function (/*fn, args*/) {
+var fr = function (/*fn, args*/) {
 	var args, fn;
 	fn = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
 	//todo currying so you can keep going	
@@ -49,7 +49,7 @@ var f6 = function (/*fn, args*/) {
 			var leftOver = ret.args.slice(len) 
 			var returnValue = ret.fn.apply(null, neededArgs)
 			if (leftOver.length) {
-				returnValue = f6.apply(null,[returnValue].concat(leftOver)).value()	
+				returnValue = fr.apply(null,[returnValue].concat(leftOver)).value()	
 			}
 			return returnValue;
 			//todo: cache this sometime
@@ -62,14 +62,14 @@ var f6 = function (/*fn, args*/) {
 			ret.args = [fn].concat(args.slice(1))
 		}
 
-		ret.input = f6()
+		ret.input = fr()
 		// prevent too much binding?
-		f6.actuallyDoTheBinding(ret.input, ret, ret)
+		fr.actuallyDoTheBinding(ret.input, ret, ret)
 		ret.listen = function (fn) {
 			ret.input.listeners.push(fn)	
 		}
 	}
-	ret.isf6ed = true;
+	ret.isfred = true;
 	if (args.length) {
 		ret.isFn = true;
 		ret.value = ret;
@@ -81,54 +81,55 @@ var f6 = function (/*fn, args*/) {
 }
 
 
-f6.add = function (a, b) {
-	return f6.value(a) + f6.value(b)
+fr.add = function (a, b) {
+	return fr.value(a) + fr.value(b)
 }
 
-f6.lessThan = function (a, b) {
-	return f6.value(a) < f6.value(b)
+fr.lessThan = function (a, b) {
+	return fr.value(a) < fr.value(b)
 }
 
-f6.isf6ed = function (a) {
-	return _.isObject(a) && a.isf6ed
+fr.isfred = function (a) {
+	return _.isObject(a) && a.isfred
 }
 
-f6.value = function (a) {
-	if (f6.isf6ed(a)) {
+fr.value = function (a) {
+	if (fr.isfred(a)) {
 		return a.value()
 	} else {
 		return a	
 	}
 }
 
-f6.if6 = function (a, b, c) {
-	if (f6.value(a)) {
-		return f6.value(b)
+fr.iff = function (a, b, c) {
+	if (fr.value(a)) {
+		return fr.value(b)
 	} else {
-		return f6.value(c)
+		return fr.value(c)
 	}
 } 
 
-f6.actuallyDoTheBinding = function (input, outerExp, innerExp) {
+fr.actuallyDoTheBinding = function (input, outerExp, innerExp) {
 	//todo: don't bind all, just the ones you know you use. think of an if statement
 	_.each(innerExp.args, function (arg) {
-		if (f6.isf6ed(arg)) {
+		if (fr.isfred(arg)) {
 			if (!arg.isFn) {
 				arg.listen(function (newValue, oldValue, argInput) {
-					var inputValue = f6.value(outerExp)
+					var inputValue = fr.value(outerExp)
 					input(inputValue) //should I wrap it? 	
 				})
 			} else {
-				f6.actuallyDoTheBinding(input, outerExp, arg);
+				fr.actuallyDoTheBinding(input, outerExp, arg);
 			}
 		}
 	})				
 }
 
-f6.concat = function (a, b) {
-	return f6.value(a).toString() + f6.value(b).toString()
+fr.concat = function (a, b) {
+	return fr.value(a).toString() + fr.value(b).toString()
 }
 
-f6.substr = function (str, start, len) {
-	return f6.value(str).substr(f6.value(start), f6.value(len))
+fr.substr = function (str, start, len) {
+	return fr.value(str).substr(fr.value(start), fr.value(len))
 }
+
