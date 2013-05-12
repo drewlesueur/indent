@@ -42,9 +42,11 @@
 
 
 <script>
-var touches = f6.emptyList
-var plays = f6(touches, map, getQuadrant)
-$(document).on("click", tou)
+var touches = fr.emptyList
+var plays = fr(touches, frMap, getQuadrant)
+$(document).on("click", function (e) {
+	touches(touches.prepend({x: e.clientX, y: e.clientY}))
+})
 //$(document).tap(touches.push)
 
 

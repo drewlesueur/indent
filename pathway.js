@@ -20,7 +20,7 @@ var fr = function (/*fn, args*/) {
 		ret = function (newValue) {
 			if (arguments.length) {
 				var oldValue = ret._value	
-				ret._value = newValue
+				ret._value = fr.value(newValue)
 				//trigger
 				_.each(ret.listeners, function (listener) {
 					listener(newValue, oldValue, ret);
@@ -57,9 +57,11 @@ var fr = function (/*fn, args*/) {
 		if (_.isFunction(fn)) {
 			ret.fn = fn
 			ret.args = args
-		} else {
+		} else if (_.isFunction(args[0])){
 			ret.fn = args[0]
 			ret.args = [fn].concat(args.slice(1))
+		} else {
+			
 		}
 
 		ret.input = fr()
@@ -132,4 +134,40 @@ fr.concat = function (a, b) {
 fr.substr = function (str, start, len) {
 	return fr.value(str).substr(fr.value(start), fr.value(len))
 }
+
+
+fr.list = function () {
+	var args;
+	args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];	
+	return fr.toLinkedList(args)
+}
+
+fr.toLinkedList = function (list, index) {
+	index = index || 0
+	var item = list[index]
+	if (is_array(item)) {
+		item = to_linked_list(item, 0)
+	}
+
+	if (index + 1 >= list.length) {
+		return [item];
+	} else {
+		var next = to_linked_list(list, index + 1)
+		if (next.length == 1) { next = next[0] }
+		return [item, next] 
+	}
+}
+
+
+
+/* 
+ name = (frList name drew age 28)
+
+ name frList name age 28 
+ 
+ */
+
+
+
+
 
