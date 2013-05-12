@@ -42,10 +42,24 @@
 
 
 <script>
-var touches = fr.emptyList
-var plays = fr(touches, frMap, getQuadrant)
+_map = fr.valued(_.map)
+_last = fr.valued(_.last)
+var getQuadrant = function (e) {
+	return Math.floor(e.clientX / 106) + 3 * Math.floor(e.clientY / 106)
+}
+
+var touches = fr([])
+var plays = fr(touches, _map, getQuadrant)
+var newest = fr(plays, _last)
+var turn = fr(plays, frMod, 2, frEquals, 0)
+
+newest.listen(function (value) {
+	$("#c" + value).text(turn())
+})
+
 $(document).on("click", function (e) {
-	touches(touches.prepend({x: e.clientX, y: e.clientY}))
+	touches().push(e)
+	touches(touches)
 })
 //$(document).tap(touches.push)
 

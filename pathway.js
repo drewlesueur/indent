@@ -44,7 +44,7 @@ var fr = function (/*fn, args*/) {
 		}
 	} else {
 		ret = function () {
-			var len = ret.fn.length
+			var len = ret.fn.length || ret.args.length
 			var neededArgs = ret.args.slice(0, len) 
 			var leftOver = ret.args.slice(len) 
 			var returnValue = ret.fn.apply(null, neededArgs)
@@ -54,7 +54,10 @@ var fr = function (/*fn, args*/) {
 			return returnValue;
 			//todo: cache this sometime
 		}
-		if (_.isFunction(fn)) {
+		if (_.isFunction(fn) && fn.isfred) {
+			ret.fn = args[0]	
+			ret.args = [fn].concat(args.slice(1))
+		} else if (_.isFunction(fn)) {
 			ret.fn = fn
 			ret.args = args
 		} else if (_.isFunction(args[0])){
@@ -85,6 +88,19 @@ var fr = function (/*fn, args*/) {
 
 fr.add = function (a, b) {
 	return fr.value(a) + fr.value(b)
+}
+
+fr.mod = function (a, b) {
+	return fr.value(a) % fr.value(b)
+}
+
+fr.equals = function (a, b) {
+	return fr.value(a) == fr.value(b)
+}
+
+fr.len = function (a) {
+	//todo only if its an array. if not just do fr.value(a)("prop-access-length") or something like that
+	return fr.value(a).length
 }
 
 fr.lessThan = function (a, b) {
@@ -135,8 +151,18 @@ fr.substr = function (str, start, len) {
 	return fr.value(str).substr(fr.value(start), fr.value(len))
 }
 
+fr.valued = function (fn) {
+	return function () {
+		var args;
+		args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];	
+		var realArgs = _.map(args, function (arg) { return fr.value(arg)})	
+		return fn.apply(null, realArgs)
+	}
+}
+
 
 fr.list = function () {
+	//TODO: finsith this
 	var args;
 	args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];	
 	return fr.toLinkedList(args)
