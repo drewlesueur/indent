@@ -44,6 +44,7 @@
 <script>
 _map = fr.valued(_.map)
 _last = fr.valued(_.last)
+var frLen = fr.len, frMod = fr.mod, frEquals = fr.equals, frIf = fr.iff
 var getQuadrant = function (e) {
 	return Math.floor(e.clientX / 106) + 3 * Math.floor(e.clientY / 106)
 }
@@ -51,7 +52,8 @@ var getQuadrant = function (e) {
 var touches = fr([])
 var plays = fr(touches, _map, getQuadrant)
 var newest = fr(plays, _last)
-var turn = fr(plays, frMod, 2, frEquals, 0)
+var turn = fr(plays, frLen, frMod, 2, frEquals, 0, frIf, "o", "x")
+var winner = fr(plays)
 
 newest.listen(function (value) {
 	$("#c" + value).text(turn())
