@@ -18,7 +18,8 @@ var indent = function (code) {
     //geraldine  joaquine  
 
   var parse_line = function (line, indent_count) {
-    return line.substr(indent_count).split(/ +/) // for now, soon parse parens and simple dash based multi line strings 
+    //return line.substr(indent_count).split(/ +/) // for now, soon parse parens and simple dash based multi line strings 
+    return parens(line.substr(indent_count))
   }
 
 	var get_indent_count = function (line) {
