@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
+<script src="zepto.min.js"></script>
+<script src="underscore-min.js"></script>
+<script src="pathway.js"></script>
+<script src="mousetrap.min.js"></script>
+<script>
+  // rerender program state
+  // rerender UI
+  var state = {boxes: [], currentBox: null}
+  var program = function (state, events) {
+    var state = _.reduce(events, function (state, event) {
+      if (event.type == "newBox") {
+        var box = {id: event.id, x: 0, y: 0}
+        state.boxes.push(box)
+        state.currentBox = box
+      } else if (event.type == "boxClick") {
+        state.currentBox = event.box
+      } else if (event.type == "key") {
+        if (event.key == "up") {
+          state.currentBox.y -= 1 
+        } else if (event.key == "down") {
+          state.currentBox.y += 1 
+        } else if (event.key == "left") {
+          state.currentBox.x -= 1 
+        } else if (event.key == "right") {
+          state.currentBox.x += 1 
+        }
+      } 
+      return state
+    }, state)
+    console.log(state)
+    window.s = state
+    return state
+  }
+
+  var render = function (state, events) {
+    var state = program(state, events)
+    // this is rerendering
+    $("#canvas").empty()
+    _.each(state.boxes, function (box) {
+      var boxEl = $("<div></div>").css({
+        width: "20px", 
+        height: "20px", 
+        left: box.x + "px", 
+        top: box.y + "px",
+        position: "absolute",
+        border: "1px solid black"
+      }).attr("id", box.id).click(function () {
+        events.push({type: "boxClick", "box": box}) 
+        render(events)
+      })
+
+      $("#canvas").append(boxEl) 
+
+    })
+   events = []
+  } 
+
+  var events = []
+  var addBoxClick = function () {
+    events.push({type: "newBox", id:  _.uniqueId("box_")}) 
+    render(events)
+  }
+
+  Mousetrap.bind("up", function () { events.push({type: "key", "key": "up"}); render(events) })
+  Mousetrap.bind("down", function () { events.push({type: "key", "key": "down"}); render(events) })
+  Mousetrap.bind("left", function () { events.push({type: "key", "key": "left"}); render(events) })
+  Mousetrap.bind("right", function () { events.push({type: "key", "key": "right"}); render(events) })
+
+</script>
+</head>
+<body>
+  <input type="button" id="addBox" value="add box" onclick="addBoxClick()"/>
+  <input type="button" id="removeBox" value="remove box" onclick="removeBoxClick()"/>
+  <div id="canvas" style="position:absolute;">
+  
+  </div>
+</body>
+</html>

@@ -1,3 +1,7 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"> 
 <script src="zepto.min.js"></script>
 <script src="underscore-min.js"></script>
 <script src="pathway.js"></script>
@@ -33,7 +37,8 @@
 
 </style>
 
-
+</head>
+<body>
 <table class="tic-tac-toe">
 	<tr> <td id=c0></td> <td id=c1></td> <td id=c2></td> </tr>
 	<tr> <td id=c3></td> <td id=c4></td> <td id=c5></td> </tr>
@@ -44,29 +49,63 @@
 <script>
 _map = fr.valued(_.map)
 _last = fr.valued(_.last)
-var frLen = fr.len, frMod = fr.mod, frEquals = fr.equals, frIf = fr.iff
+_reduce = fr.valued(_.reduce)
+var frLen = fr.len, frMod = fr.mod, frEquals = fr.equals, frIf = fr.iff, frGet = fr.get
+var frOr = fr.or;
 var getQuadrant = function (e) {
-	return Math.floor(e.clientX / 106) + 3 * Math.floor(e.clientY / 106)
+	return Math.floor(e.x / 106) + 3 * Math.floor(e.y / 106)
+}
+var inARow = function (a, b, c) {
+  return 
+}
+
+var getTurn = fr.valued(function (len) {
+  return fr(len, frMod, 2, frEquals, 0, frIf, "o", "x")()
+})
+//getTurn = fr(frFn, "plays", "plays", frLen, frMod, 2, frEquals, 0, frIf, "o", "x")
+
+var makeBoard = function (board, play, index) {
+  board[play] = getTurn(index) 
+  return board;
 }
 
 var touches = fr([])
 var plays = fr(touches, _map, getQuadrant)
 var newest = fr(plays, _last)
-var turn = fr(plays, frLen, frMod, 2, frEquals, 0, frIf, "o", "x")
-var winner = fr(plays)
+
+var turn = fr(plays, frLen, getTurn)
+
+
+var board = fr(plays, _reduce, makeBoard,{})
+//not super efficient but it'll work
+// you could base it off the newest turn
+var winner = fr(
+        fr(inARow, 0, 1, 2),
+  frOr, fr(inARow, 3, 4, 5),
+  frOr, fr(inARow, 6, 7, 8),
+
+  frOr, fr(inARow, 0, 3, 6),
+  frOr, fr(inARow, 1, 4, 7),
+  frOr, fr(inARow, 2, 5, 8),
+
+  frOr, fr(inARow, 0, 4, 8),
+  frOr, fr(inARow, 6, 4, 2)
+)
 
 newest.listen(function (value) {
 	$("#c" + value).text(turn())
+  alert(JSON.stringify(board()))
+})
+winner.listen(function (value) {
+  alert(value + " won")
 })
 
-$(document).on("click", function (e) {
-	touches().push(e)
-	touches(touches)
-})
-//$(document).tap(touches.push)
-
-
-
+document.ontouchstart = function (e) {
+  touches().push({x: e.touches[0].clientX, y: e.touches[0].clientY})
+    touches(touches)
+}
 
 </script>
+</body>
+</html>
 

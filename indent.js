@@ -17,67 +17,8 @@ var indent = function (code) {
   //get_expected_word ; word
     //geraldine  joaquine  
 
-  var parse_line = function (line) {
-    return line.split(/ +/) // for now, soon parse parens and simple dash based multi line strings
-    var line_state = {
-      i: 0,
-      line: line,
-      expr_stack: [],
-      expr: [],
-      word: "",
-      state: "normal",
-      backslash_word: ""
-    }
-    // sq - "
-    var step_line = function (line_state) {
-      var chr = line.substr(line_state.i)
- 
-     if (line_state.state == "normal") {
-        if (chr == "(") {
-          line_state.expr_stack.push(line_state.expr)
-          line_state.expr = []
-        } else if (chr == ")") {
-          var expr = line_state.expr
-          line_state.expr = line_state.expr_stack.pop()
-          line_state.expr.push(expr)
-          
-        } else if (chr == " "){
-          line_state.expr.push(state.word)
-          line_state.word = ""
-        } else if (chr == "\""){
-          line_state.state = "quote"
-        } else {
-          line_state.word = line_state.word + chr
-        }
-      } else if (state == "quote") {
-        if (chr == "\\") {
-          line_state.state = "backslash"
-        } else if (chr == "\"") {
-          line_state.state = "normal"
-        } else {
-          line_state.word = line_state.word + chr
-        }
-      } else if (line_state.state == "backslash") {
-        if (chr == " ") {
-          line_state.word += get_escaped_word(line_state.backslash_word)
-          line_state.word += chr
-          line_state.backslash_word = ""
-          line_state.state = "quote"
-        } else if (chr == "\\") {
-           line_state.word += get_escaped_word(line_state.backslash_word)
-           line_state.backslash_word = ""
-        }
-      }
-    }
-    
-    var line_i = 0
-    while (line_i < line.length) {
-      line_state.i = line_i
-      line_state = step_line(line_state)
-    }
-    
-    return line_state.expr
-  
+  var parse_line = function (line, indent_count) {
+    return line.substr(indent_count).split(/ +/) // for now, soon parse parens and simple dash based multi line strings 
   }
 
 	var get_indent_count = function (line) {
@@ -109,7 +50,7 @@ var indent = function (code) {
     } else {
       state = pop_expr(indent_count, state)
     }
-    state.last_line = parse_line(line)
+    state.last_line = parse_line(line, indent_count)
     state.expr.push(state.last_line)
     state.indent_count = indent_count
     return state;

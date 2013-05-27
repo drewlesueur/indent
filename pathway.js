@@ -85,7 +85,6 @@ var fr = function (/*fn, args*/) {
 	return ret;
 }
 
-
 fr.add = function (a, b) {
 	return fr.value(a) + fr.value(b)
 }
@@ -182,6 +181,14 @@ fr.toLinkedList = function (list, index) {
 		if (next.length == 1) { next = next[0] }
 		return [item, next] 
 	}
+}
+
+fr.get = function (list, item){
+  return fr.value(list)[fr.value[item]]
+}
+
+fr.or = function (a, b) {
+  return fr.value(a) || fr.value(b)
 }
 
 
