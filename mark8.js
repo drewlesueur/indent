@@ -1,4 +1,6 @@
-
+var macros = {
+  "get": 1
+}
 
 var assign = function (state, words, call) {
   state.ret.push("var " + words[0] + " = " + doReturn(call) + ";")
@@ -6,11 +8,8 @@ var assign = function (state, words, call) {
 }
 
 var defineFunction = function (state, left, right) {
-
   var funcName = left[0] 
-
   var args = left.slice(1).join(", ")
-
   var miniret = []
   for (var i = 0; i <  right.length; i++) {
     item = right[i];
@@ -41,9 +40,11 @@ var doReturn = function(call) {
   var ret  = [];
  console.log(call) 
   if (_.isArray(call)) {
-    //if (call.length == 1) {
-    //  return call[0]
-    //}
+    if (call.length == 1) {
+      return call[0]
+    }
+
+    if (call.length )
     ret.push(doReturn(call[0]))
     //ret.push(call[0])
     ret.push("(")
