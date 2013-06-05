@@ -1,0 +1,16 @@
+<script src="underscore-min.js"></script>
+<script src="parens.js"></script>
+<script src="indent.js"></script>
+<script src="mark8.js"></script>
+
+<textarea id="t" style="width: 100%; height: 300px; font-family: courier new; font-size: 20px;"></textarea>
+<input type="button" onclick="run()" value="run"/>
+
+<pre id="o"></pre>
+<script>
+function run() {
+  var code = document.getElementById("t").value;
+  var result = mark8(code);
+  document.getElementById("o").innerHTML = result;
+}
+</script>
