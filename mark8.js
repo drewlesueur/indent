@@ -5,8 +5,10 @@ var assign = function (state, words, call) {
   return state
 }
 
-var callFunction = function (state, left, right) {
-  var funcName = left[0]
+var defineFunction = function (state, left, right) {
+
+  var funcName = left[0] 
+
   var args = left.slice(1).join(", ")
 
   var miniret = []
@@ -23,6 +25,7 @@ var callFunction = function (state, left, right) {
   } else if (miniret.length == 1) {
     right = miniret[0]
   }
+
   state.ret.push("\nvar " + funcName + " = function (" + args +") {")
   if (_.isArray(right)) {
     state.ret.push(mark8(right));
@@ -41,7 +44,8 @@ var doReturn = function(call) {
     //if (call.length == 1) {
     //  return call[0]
     //}
-    ret.push(call[0])
+    ret.push(doReturn(call[0]))
+    //ret.push(call[0])
     ret.push("(")
     var miniret = []
     for (var i = 1; i < call.length; i ++) {
@@ -56,13 +60,14 @@ var doReturn = function(call) {
 }
 
 var compileLine = function (line, state) {
+  if (line.length == 0) return state;
   var equalSign = _.indexOf(line, "=")
   if (equalSign == 1) {
     right = line.slice(2)
     if (right.length == 1) right = right[0]
     return assign(state, line.slice(0, 1), right)
   } else if (equalSign > 1) {
-    return callFunction(state, line.slice(0, equalSign), line.slice(equalSign + 1))
+    return defineFunction(state, line.slice(0, equalSign), line.slice(equalSign + 1))
   } else {
     state.ret.push("return " + doReturn(line));
   }
