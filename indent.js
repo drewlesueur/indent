@@ -67,6 +67,11 @@ var indent = function (code) {
   return state.expr
 }
 
+if (typeof exports !== 'undefined') {
+  if (typeof module !== 'undefined' && module.exports) {
+    exports = module.exports = indent;
+  }
+}
 
 //console.log(parens("say test\nother say"))
 //console.log(parens("say test\nother say\n  yo world\n  yo stuff"))

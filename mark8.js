@@ -1,5 +1,33 @@
 var macros = {
-  "get": 1
+  "get": function (call) {
+    return call[1] + "." + call[2]
+  },
+  "+": function (call) {
+    return call[1] + " + " + call[2];
+  },
+  "-": function (call) {
+    return call[1] + " - " + call[2];
+  },
+  "/": function (call) {
+    return call[1] + " / " + call[2];
+  },
+  "*": function (call) {
+    return call[1] + " * " + call[2];
+  },
+  ifo: function (call) {
+    return "(" + doReturn(call[1]) + " ? " + doReturn(call[2]) + " : " + doReturn(call[3]) + ")"
+  },
+  is: function (call) {
+    return "(" + doReturn(call[1]) + " === " + doReturn(call[2]) + ")"
+  },
+  dict: function (call) {
+    var ret = []  
+    for (var i = 1; i < call.length; i++) {
+      var item = call[i]
+      ret.push(item[0] + ":" + doReturn(item[1]));
+    }
+    return "{" + ret.join(",\n") + "}"
+  },
 }
 
 var assign = function (state, words, call) {
@@ -44,8 +72,12 @@ var doReturn = function(call) {
       return call[0]
     }
 
-    if (call.length )
-    ret.push(doReturn(call[0]))
+    if (!_.isArray(call[0]) && call[0] in macros) {
+      return macros[call[0]](call)
+    } else {
+      ret.push(doReturn(call[0]))
+    }
+
     //ret.push(call[0])
     ret.push("(")
     var miniret = []
