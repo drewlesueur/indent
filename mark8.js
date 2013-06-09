@@ -14,7 +14,7 @@ var macros = {
   "*": function (call) {
     return call[1] + " * " + call[2];
   },
-  ifo: function (call) {
+  "if": function (call) {
     return "(" + doReturn(call[1]) + " ? " + doReturn(call[2]) + " : " + doReturn(call[3]) + ")"
   },
   is: function (call) {

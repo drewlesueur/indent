@@ -3,7 +3,13 @@
 <script src="indent.js"></script>
 <script src="mark8.js"></script>
 
-<textarea id="t" style="width: 100%; height: 300px; font-family: courier new; font-size: 20px;"></textarea>
+<textarea id="t" style="width: 100%; height: 300px; font-family: courier new; font-size: 20px;">
+greet name = + "hi-" name
+
+greeting = greet "drew"
+
+alert greeting
+</textarea>
 <input type="button" onclick="run()" value="run"/>
 
 <pre id="o"></pre>
@@ -12,5 +18,6 @@ function run() {
   var code = document.getElementById("t").value;
   var result = mark8(code);
   document.getElementById("o").innerHTML = result;
+  eval("(function () {" +result+"})()")
 }
 </script>

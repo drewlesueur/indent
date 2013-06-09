@@ -1,24 +1,12 @@
 var indent = function (code) {
   var lines = code.split("\n")
   var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: []}
-  var escaped_words = {
-    n: "\n"
-    
-  }
-  var get_escaped_word = function (word) {
-    if (word in escaped_words) {
-      return escaped_words[word]
-    } else {
-      return word
-    }
-    // todo: \xabcd
-  }
 
-  //get_expected_word ; word
     //geraldine  joaquine  
 
   var parse_line = function (line, indent_count) {
     //return line.substr(indent_count).split(/ +/) // for now, soon parse parens and simple dash based multi line strings 
+   
     return parens(line.substr(indent_count))
   }
 
@@ -82,4 +70,10 @@ if (typeof exports !== 'undefined') {
 console.log(indent("say test\nother say\n  yo world\n    here too\n  yo stuff"))
 //console.log(parens("say test\nother say\n  yo world\n    here too"))
 
+/*
 
+  mystirng = ###
+    this is a multi line string
+    is has
+
+*/

@@ -56,9 +56,13 @@ var parens = function (code, linked_list) {
       } else if (chr == ")") {
         state.string_parens -= 1
         if (state.string_parens < 0) {
-          state.expr.push(state.word)
+
+          state.expr = state.stack.pop()
+          state.expr.push("\"" + JSON.parse("\"" + state.word + "\"") + "\"")
+
           state.word = ""
           state.mode = "normal"
+
           return state;
         }
       }
