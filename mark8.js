@@ -108,7 +108,7 @@ var compileLine = function (line, state) {
 }
 
 var mark8 = function (code) {
-  var parsed = _.isArray(code) ? code : indent(code)
+  var parsed = _.isArray(code) ? code : indent(string_indent(code))
   var length = parsed.length
   var state = {
     ret: []

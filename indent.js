@@ -1,3 +1,12 @@
+var get_indent_count = function (line) {
+  var ic = 0
+  var line_len = line.length
+  while (ic < line_len) {
+    if (line.substr(ic,1) == " ") { ic++ } else { break }
+  }
+  return ic
+}
+
 var indent = function (code) {
   var lines = code.split("\n")
   var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: []}
@@ -10,14 +19,6 @@ var indent = function (code) {
     return parens(line.substr(indent_count))
   }
 
-	var get_indent_count = function (line) {
-		var ic = 0
-		var line_len = line.length
-		while (ic < line_len) {
-			if (line.substr(ic,1) == " ") { ic++ } else { break }
-		}
-		return ic
-	}
 
   pop_expr = function (indent_count, state) {
     while (indent_count < state.indent_count) {

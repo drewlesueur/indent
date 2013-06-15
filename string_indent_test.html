@@ -1,0 +1,33 @@
+<script src="parens.js"></script>
+<script src="indent.js"></script>
+<script src="string_indent.js"></script>
+<script type="text/html" id="test1">
+a = ---
+  this is a string yo
+</script>
+<script type="text/html" id="test2">
+a = ---
+  this is a string yo
+
+b = ---
+  so is this
+
+c = ---
+  so is this
+  and this even too
+    what about yoyo
+  
+  here
+d = 1
+but not this
+</script>
+<script>
+var w = function (x) { document.write(x)}
+var getEl = function (x) {return document.getElementById(x)} 
+var getText = function (x) { return getEl(x).innerHTML}
+w("<pre>")
+w("yo ")
+//w(string_indent(getText("test1")))
+w("\n-------------\n")
+w(string_indent(getText("test2")))
+</script>

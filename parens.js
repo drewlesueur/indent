@@ -58,7 +58,7 @@ var parens = function (code, linked_list) {
         if (state.string_parens < 0) {
 
           state.expr = state.stack.pop()
-          state.expr.push("\"" + JSON.parse("\"" + state.word + "\"") + "\"")
+          state.expr.push("\"" + (state.word) + "\"")
 
           state.word = ""
           state.mode = "normal"
