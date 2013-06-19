@@ -1,0 +1,49 @@
+<script src="underscore-min.js"></script>
+<script src="jquery.js"></script>
+<script src="parens.js"></script>
+<script src="string_indent.js"></script>
+<script src="indent.js"></script>
+<script src="mark8.js"></script>
+
+<div id="results"></div>
+
+<script class="test" type="mark8">
+alert $(hello world)
+</script>
+
+<script id="render" type="text/html">
+  <table border=1 style=border-collapse:collapse;>
+    <% _.each(tests, function (test) { %>
+      <tr>
+        <td class="mark8-code">
+<pre>
+<%= test.mark8 %>        
+</pre>
+      </td> 
+      <td class="mark8-code">
+<pre>
+<%= test.js %>        
+</pre>
+      </td> 
+      </tr> 
+    <% }) %>
+  </table>
+</script>
+
+<script>
+var runTests = function () {
+  var inputs = _.map($(".test"), function (testEl) {
+    return $(testEl).html()
+  })
+
+  var results = _.map(inputs, function (input) {
+    return {
+      mark8: input,
+      js: mark8(input)
+    } 
+  })
+  $("#results").html(_.template($("#render").html(), {tests: results}))
+}
+runTests();
+</script>
+

@@ -98,7 +98,8 @@ var compileLine = function (line, state) {
   if (equalSign == 1) {
     right = line.slice(2)
     if (right.length == 1) right = right[0]
-    return assign(state, line.slice(0, 1), right)
+    var varName = liine.slice(0, 1)
+    return assign(state, varName, right)
   } else if (equalSign > 1) {
     return defineFunction(state, line.slice(0, equalSign), line.slice(equalSign + 1))
   } else {
