@@ -103,7 +103,7 @@ var maybeString = function (state, varName) {
   if (varName in state.scope) {
     return varName
   } else {
-    return JSON.stringify(decodeURIComponent(varName)) // maybe only JSON.stringify here
+    return "\"" + decodeURIComponent(varName).replace(/\n/g,"\\n").replace(/\"/g, "\\\"") + "\"" 
   }
 
 } 
@@ -119,19 +119,21 @@ var doReturn = function(state, call) {
 
     if (!_.isArray(call[0]) && call[0] in macros) {
       return macros[call[0]](state, call)
-    } else {
+    } else if (!_.isArray(call[0]) && call[0] in state.scope){
       ret.push(doReturn(state, call[0]))
+      //ret.push(call[0])
+      ret.push("(")
+      var miniret = []
+      for (var i = 1; i < call.length; i ++) {
+        miniret.push(doReturn(state, call[i]))
+      }
+      ret.push(miniret.join(", "))
+      ret.push(")")
+      return ret.join("");
+    } else {
+      return "\"" + call.join(" ") + "\""
     }
 
-    //ret.push(call[0])
-    ret.push("(")
-    var miniret = []
-    for (var i = 1; i < call.length; i ++) {
-      miniret.push(doReturn(state, call[i]))
-    }
-    ret.push(miniret.join(", "))
-    ret.push(")")
-    return ret.join("");
   } else {
     return maybeString(state, call)
   }

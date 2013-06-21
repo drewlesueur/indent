@@ -29,7 +29,8 @@ var parens = function (code, linked_list) {
   }
 
   var i = 0
-  var state = {chr: "", word: "", stack: [], expr: [], mode: "normal"}
+  var state = {chr: "", word: "", stack: [], expr: [], mode: "normal", string_parens: 0}
+  var string_symbol = "$"; //this could change
   var close_word = function (state) {
     if (state.word.length) {
       state.expr.push((state.word))
@@ -43,6 +44,11 @@ var parens = function (code, linked_list) {
       if (chr == "(") {
         state.stack.push(state.expr)
         state.expr = []
+        if (state.word == string_symbol) {
+          state.word = "";
+          state.mode = "string";
+          state.string_parens = 0
+        }
       } else if (chr == ")" && state.stack.length) {
         state = close_word(state)
         var expr = state.expr
@@ -53,6 +59,23 @@ var parens = function (code, linked_list) {
       } else {
         state.word += chr
       }
+    } else if (state.mode == "string") {
+      if (chr == "(") {
+        state.string_parens += 1
+      } else if (chr == ")") {
+        state.string_parens -= 1
+        if (state.string_parens < 0) {
+
+          state.expr = state.stack.pop()
+          state.expr.push(encodeURIComponent(state.word))
+
+          state.word = ""
+          state.mode = "normal"
+
+          return state;
+        }
+      }
+      state.word += chr
     }
     return state;
   }

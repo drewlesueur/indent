@@ -8,7 +8,7 @@
 <div id="results"></div>
 
 <script class="test" type="mark8">
-alert $(hello world)
+alert hello+world
 </script>
 
 <script class="test" type="mark8">
@@ -16,6 +16,21 @@ alert (str hello world)
 </script>
 
 <script class="test" type="mark8">
+alert (str \x22)
+</script>
+
+<script class="test" type="mark8">
+alert \x22
+</script>
+
+<script class="test" type="mark8">
+msg =  
+  \x22
+alert msg
+</script>
+
+<script class="test" type="mark8">
+yo = 1
 message =  
   hello world! :)
 yo
@@ -26,7 +41,7 @@ a = 2
 </script>
 
 <script class="test" type="mark8">
-a = $(test \n this)
+a = (test \n this)
 </script>
 
 <script class="test" type="mark8">
