@@ -5,11 +5,17 @@
 <script src="mark8.js"></script>
 
 <textarea id="t" style="width: 100%; height: 300px; font-family: courier new; font-size: 20px;">
-greet name = + "hi-" name
-
-greeting = greet "drew"
-
+greet name = spaced Hi name
+greeting = greet drew
 alert greeting
+
+greeting2 = greet (drew lesueur)
+alert greeting2
+
+
+area_of_circle r = ^ (* 3.14 r) 2
+
+alert (area_of_circle 1)
 </textarea>
 <input type="button" onclick="run()" value="run"/>
 
@@ -17,7 +23,11 @@ alert greeting
 <script>
 function run() {
   var code = document.getElementById("t").value;
-  var result = mark8(code);
+  var result = mark8(code, 0, {
+    "alert": 1,
+    "document": 1,
+    "window": 1,
+  });
   document.getElementById("o").innerHTML = result;
   eval("(function () {" +result+"})()")
 }

@@ -12,7 +12,10 @@ var macros = {
     return call[1] + " / " + call[2];
   },
   "*": function (state, call) {
-    return call[1] + " * " + call[2];
+    return "(" + doReturn(state, call[1]) + " * " + doReturn(state, call[2]) + ")"
+  },
+  "^": function (state, call) {
+    return "Math.pow(" + doReturn(state, call[1]) + ", " + doReturn(state, call[2]) + ")"
   },
   "if": function (state, call) {
     return "(" + doReturn(state, call[1]) + " ? " + doReturn(state, call[2]) + " : " + doReturn(state, call[3]) + ")"
@@ -30,6 +33,9 @@ var macros = {
   },
   concat: function (state, call) {
     return doReturn(state, call[1]) + " + " + doReturn(state, call[2])
+  },
+  spaced: function (state, call) {
+    return doReturn(state, call[1]) + " + \" \" + " + doReturn(state, call[2])
   },
   str: function (state, call) {
     return "\"" + call.slice(1).join(" ") + "\""
@@ -106,7 +112,7 @@ var returning = function (state, line) {
   }
 }
 var maybeString = function (state, varName) {
-  if (varName.match(/^\d+$/)) {
+  if (parseFloat(varName) == varName) {
     return varName
   }
   if (varName in state.scope) {
