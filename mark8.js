@@ -75,13 +75,13 @@ var defineFunction = function (state, left, right) {
     right = miniret[0]
   }
 
-  state = addCompiledLine(state, "\nvar " + funcName + " = function (" + args +") {")
   state.scope[funcName] = "here :)"
   _.each(argNames, function (name) {
     state.scope[name] = "here :)"
   })
+  state = addCompiledLine(state, "\nvar " + funcName + " = function (" + args +") {")
   if (_.isArray(right)) {
-    state = addCompiledLine(state, mark8(right, state.givenIndentCount + 1), state.scope);
+    state = addCompiledLine(state, mark8(right, state.givenIndentCount + 1, state.scope));
   } else {
     state = addCompiledLine(state, returning(state, right))
   }
