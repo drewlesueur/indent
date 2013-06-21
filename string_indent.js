@@ -28,14 +28,14 @@ var string_indent = function (input) {
   for (var j = 0; j < lines.length; j++) {
     if (i >= lines.length) { break }
     var line = lines[i]
-    var startString = line.indexOf("---");
+    var startString = line.indexOf("=  ");
     if (startString != -1) {
       var indentCount = get_indent_count(line)
       var info = getLastStringLine(lines, indentCount + 2, i + 1)
       i = info.i - 1
       var strLines = info.lines
-      var generatedStr = strLines.join("\\n")
-      newLines.push(line.substr(0, startString) + "$(" + generatedStr + ")")
+      var generatedStr = strLines.join("\n")
+      newLines.push(line.substr(0, startString) + "= $(" + JSON.stringify(generatedStr) + ")")
     } else {
       newLines.push(line)
     }

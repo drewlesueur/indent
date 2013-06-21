@@ -28,10 +28,30 @@ var macros = {
     }
     return "{" + ret.join(",\n") + "}"
   },
+  concat: function (call) {
+    return doReturn(call[1]) + " + " + doReturn(call[2])
+  },
+  str: function (call) {
+    return "\"" + call.slice(1).join(" ") + "\""
+  } 
+}
+
+var whiteSpace = function (len) {
+  len = len * 2
+  var ret = "";
+  _.times(len, function () {
+    ret += " "
+  })
+  return ret;
+}
+
+var addCompiledLine = function (state, line) {
+  state.ret.push(whiteSpace(state.givenIndentCount) + line)
+  return state;
 }
 
 var assign = function (state, words, call) {
-  state.ret.push("var " + words[0] + " = " + doReturn(call) + ";")
+  state = addCompiledLine(state, "var " + words[0] + " = " + doReturn(call) + ";")
   return state
 }
 
@@ -53,14 +73,23 @@ var defineFunction = function (state, left, right) {
     right = miniret[0]
   }
 
-  state.ret.push("\nvar " + funcName + " = function (" + args +") {")
+  state = addCompiledLine(state, "\nvar " + funcName + " = function (" + args +") {")
   if (_.isArray(right)) {
-    state.ret.push(mark8(right));
+//debugger
+    state = addCompiledLine(state, mark8(right, state.givenIndentCount + 1));
   } else {
-    state.ret.push("return " + right)
+    state = addCompiledLine(state, returning(state, right))
   }
-  state.ret.push("}")
+  state = addCompiledLine(state, "}")
   return state;
+}
+
+var returning = function (state, line) {
+  if (state.givenIndentCount === 0) {
+    return line
+  } else {
+    return "return " + line
+  }
 }
 
 var doReturn = function(call) {
@@ -98,21 +127,24 @@ var compileLine = function (line, state) {
   if (equalSign == 1) {
     right = line.slice(2)
     if (right.length == 1) right = right[0]
-    var varName = liine.slice(0, 1)
+    var varName = line.slice(0, 1)
     return assign(state, varName, right)
   } else if (equalSign > 1) {
     return defineFunction(state, line.slice(0, equalSign), line.slice(equalSign + 1))
   } else {
-    state.ret.push("return " + doReturn(line));
+    state.ret.push();
+    state = addCompiledLine(state, returning(state, doReturn(line)))
   }
   return state;
 }
 
-var mark8 = function (code) {
-  var parsed = _.isArray(code) ? code : indent(string_indent(code))
+var mark8 = function (code, givenIndentCount) {
+  if (!givenIndentCount) givenIndentCount = 0;
+  var parsed = _.isArray(code) ? code : indent(code)
   var length = parsed.length
   var state = {
-    ret: []
+    ret: [],
+    givenIndentCount: givenIndentCount
   }
 
   for (var i = 0; i < length; i++) {

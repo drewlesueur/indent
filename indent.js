@@ -8,6 +8,7 @@ var get_indent_count = function (line) {
 }
 
 var indent = function (code) {
+  code = string_indent(code)
   var lines = code.split("\n")
   var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: []}
 

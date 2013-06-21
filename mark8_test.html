@@ -11,8 +11,38 @@
 alert $(hello world)
 </script>
 
+<script class="test" type="mark8">
+a = 2
+</script>
+
+<script class="test" type="mark8">
+greet name = concat $(hello) name
+</script>
+
+<script class="test" type="mark8">
+my_paragraph =   
+  this " is a multi line string
+  it has many lines
+
+other_var = 
+  smthng here
+
+my_integer = 3
+</script>
+
+<script class="test" type="mark8">
+name = str Drew LeSueur
+other = concat (str some cool stufff) smthng
+other = concat (+ 2 4) smthng
+
+</script>
+
 <script id="render" type="text/html">
   <table border=1 style=border-collapse:collapse;>
+      <tr>
+        <th>mark 8 code</th>
+        <th>javascript code</th>
+      </tr>
     <% _.each(tests, function (test) { %>
       <tr>
         <td class="mark8-code">
@@ -23,6 +53,17 @@ alert $(hello world)
       <td class="mark8-code">
 <pre>
 <%= test.js %>        
+</pre>
+      </td> 
+        <td class="string_indent-code">
+<pre>
+<%= test.string_indent %>        
+</pre>
+      </td> 
+      </td> 
+        <td class="indent-code">
+<pre>
+<%= JSON.stringify(test.indent) %>        
 </pre>
       </td> 
       </tr> 
@@ -39,7 +80,9 @@ var runTests = function () {
   var results = _.map(inputs, function (input) {
     return {
       mark8: input,
-      js: mark8(input)
+      js: mark8(input),
+      string_indent: string_indent(input),
+      indent: indent(input)
     } 
   })
   $("#results").html(_.template($("#render").html(), {tests: results}))

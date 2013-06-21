@@ -19,12 +19,21 @@ var parens = function (code, linked_list) {
     }
   }
 
+  // for later?
+  var parse_word = function (word) {
+    if (word.indexOf("," != -1)) {
+      return word.split(",")
+      return word
+    }
+    return word;
+  }
+
   var i = 0
   var state = {chr: "", word: "", stack: [], expr: [], mode: "normal", string_parens: 0}
   var string_symbol = "$"; //this could change
   var close_word = function (state) {
     if (state.word.length) {
-      state.expr.push(state.word)
+      state.expr.push((state.word))
       state.word = ""
     }
     return state;
@@ -58,7 +67,7 @@ var parens = function (code, linked_list) {
         if (state.string_parens < 0) {
 
           state.expr = state.stack.pop()
-          state.expr.push("\"" + (state.word) + "\"")
+          state.expr.push((state.word))
 
           state.word = ""
           state.mode = "normal"
