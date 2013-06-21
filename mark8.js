@@ -1,37 +1,37 @@
 var macros = {
-  "get": function (call) {
+  "get": function (state, call) {
     return call[1] + "." + call[2]
   },
-  "+": function (call) {
+  "+": function (state, call) {
     return call[1] + " + " + call[2];
   },
-  "-": function (call) {
+  "-": function (state, call) {
     return call[1] + " - " + call[2];
   },
-  "/": function (call) {
+  "/": function (state, call) {
     return call[1] + " / " + call[2];
   },
-  "*": function (call) {
+  "*": function (state, call) {
     return call[1] + " * " + call[2];
   },
-  "if": function (call) {
-    return "(" + doReturn(call[1]) + " ? " + doReturn(call[2]) + " : " + doReturn(call[3]) + ")"
+  "if": function (state, call) {
+    return "(" + doReturn(state, call[1]) + " ? " + doReturn(state, call[2]) + " : " + doReturn(state, call[3]) + ")"
   },
-  is: function (call) {
-    return "(" + doReturn(call[1]) + " === " + doReturn(call[2]) + ")"
+  is: function (state, call) {
+    return "(" + doReturn(state, call[1]) + " === " + doReturn(state, call[2]) + ")"
   },
-  dict: function (call) {
+  dict: function (state, call) {
     var ret = []  
     for (var i = 1; i < call.length; i++) {
       var item = call[i]
-      ret.push(item[0] + ":" + doReturn(item[1]));
+      ret.push(item[0] + ":" + doReturn(state, item[1]));
     }
     return "{" + ret.join(",\n") + "}"
   },
-  concat: function (call) {
-    return doReturn(call[1]) + " + " + doReturn(call[2])
+  concat: function (state, call) {
+    return doReturn(state, call[1]) + " + " + doReturn(state, call[2])
   },
-  str: function (call) {
+  str: function (state, call) {
     return "\"" + call.slice(1).join(" ") + "\""
   } 
 }
@@ -51,13 +51,15 @@ var addCompiledLine = function (state, line) {
 }
 
 var assign = function (state, words, call) {
-  state = addCompiledLine(state, "var " + words[0] + " = " + doReturn(call) + ";")
+  state = addCompiledLine(state, "var " + words[0] + " = " + doReturn(state, call) + ";")
+  state.scope[words[0]] = "here :)"
   return state
 }
 
 var defineFunction = function (state, left, right) {
   var funcName = left[0] 
-  var args = left.slice(1).join(", ")
+  var argNames = left.slice(1)
+  var args = argNames.join(", ")
   var miniret = []
   for (var i = 0; i <  right.length; i++) {
     item = right[i];
@@ -74,9 +76,12 @@ var defineFunction = function (state, left, right) {
   }
 
   state = addCompiledLine(state, "\nvar " + funcName + " = function (" + args +") {")
+  state.scope[funcName] = "here :)"
+  _.each(argNames, function (name) {
+    state.scope[name] = "here :)"
+  })
   if (_.isArray(right)) {
-//debugger
-    state = addCompiledLine(state, mark8(right, state.givenIndentCount + 1));
+    state = addCompiledLine(state, mark8(right, state.givenIndentCount + 1), state.scope);
   } else {
     state = addCompiledLine(state, returning(state, right))
   }
@@ -91,33 +96,41 @@ var returning = function (state, line) {
     return "return " + line
   }
 }
+var maybeString = function (state, varName) {
+  if (varName in state.scope) {
+    return varName
+  } else {
+    return "\"" + varName + "\"" // maybe only JSON.stringify here
+  }
 
-var doReturn = function(call) {
+} 
+var doReturn = function(state, call) {
   //(say (hello world) yo
   var ret  = [];
  console.log(call) 
   if (_.isArray(call)) {
+    console.log(call.length + "---------") 
     if (call.length == 1) {
-      return call[0]
+      return maybeString(state, call[0])
     }
 
     if (!_.isArray(call[0]) && call[0] in macros) {
-      return macros[call[0]](call)
+      return macros[call[0]](state, call)
     } else {
-      ret.push(doReturn(call[0]))
+      ret.push(doReturn(state, call[0]))
     }
 
     //ret.push(call[0])
     ret.push("(")
     var miniret = []
     for (var i = 1; i < call.length; i ++) {
-      miniret.push(doReturn(call[i]))
+      miniret.push(doReturn(state, call[i]))
     }
     ret.push(miniret.join(", "))
     ret.push(")")
     return ret.join("");
   } else {
-    return call
+    return maybeString(state, call)
   }
 }
 
@@ -133,18 +146,20 @@ var compileLine = function (line, state) {
     return defineFunction(state, line.slice(0, equalSign), line.slice(equalSign + 1))
   } else {
     state.ret.push();
-    state = addCompiledLine(state, returning(state, doReturn(line)))
+    state = addCompiledLine(state, returning(state, doReturn(state, line)))
   }
   return state;
 }
 
-var mark8 = function (code, givenIndentCount) {
+var mark8 = function (code, givenIndentCount, givenScope) {
   if (!givenIndentCount) givenIndentCount = 0;
+  if (!givenScope) givenScope = {};
   var parsed = _.isArray(code) ? code : indent(code)
   var length = parsed.length
   var state = {
     ret: [],
-    givenIndentCount: givenIndentCount
+    givenIndentCount: givenIndentCount,
+    scope: givenScope
   }
 
   for (var i = 0; i < length; i++) {

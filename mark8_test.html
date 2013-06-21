@@ -31,6 +31,10 @@ my_integer = 3
 </script>
 
 <script class="test" type="mark8">
+c = $(some thign here (for fun))
+</script>
+
+<script class="test" type="mark8">
 name = str Drew LeSueur
 other = concat (str some cool stufff) smthng
 other = concat (+ 2 4) smthng
@@ -80,7 +84,7 @@ var runTests = function () {
   var results = _.map(inputs, function (input) {
     return {
       mark8: input,
-      js: mark8(input),
+      js: mark8(input, 0, {"alert": 1, "smthng": 1}),
       string_indent: string_indent(input),
       indent: indent(input)
     } 
