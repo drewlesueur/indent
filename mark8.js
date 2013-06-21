@@ -97,6 +97,9 @@ var returning = function (state, line) {
   }
 }
 var maybeString = function (state, varName) {
+  if (varName.match(/^\d+$/)) {
+    return varName
+  }
   if (varName in state.scope) {
     return varName
   } else {
