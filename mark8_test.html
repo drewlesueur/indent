@@ -6,6 +6,69 @@
 <script src="mark8.js"></script>
 
 <div id="results"></div>
+<script class="test" type="mark8">
+greet name = log (+ 1 3) name
+</script>
+
+<script class="test" type="mark8">
+greet name = 
+  log (+ 1 3) name
+</script>
+
+<script class="test" type="mark8">
+greet name = log
+  + 1 3
+  name
+</script>
+
+<script class="test" type="mark8">
+greet name =
+  log
+    + 1 3
+    name
+</script>
+<script class="test" type="mark8">
+greet name =
+  log
+    + 1 3
+    name
+  
+  log
+    + 2 3
+    name
+</script>
+
+
+<script class="test" type="mark8">
+greet name = concat (+ 1 3) name
+</script>
+
+<script class="test" type="mark8">
+greet name = 
+  concat (+ 1 3) name
+</script>
+
+<script class="test" type="mark8">
+greet name = concat
+  + 1 3
+  name
+</script>
+
+<script class="test" type="mark8">
+greet name =
+  concat
+  + 1 3
+  name
+</script>
+
+<script class="test" type="mark8">
+greet name = name
+</script>
+
+
+<script class="test" type="mark8">
+greet name = concat 4 name
+</script>
 
 <script class="test" type="mark8">
 alert hello+world
@@ -45,10 +108,6 @@ a = (test \n this)
 </script>
 
 <script class="test" type="mark8">
-greet name = concat $(hello) name
-</script>
-
-<script class="test" type="mark8">
 greet name = concat hello name
 </script>
 
@@ -64,7 +123,7 @@ my_integer = 3
 </script>
 
 <script class="test" type="mark8">
-c = $(some thign here (for fun))
+c = (some thing here for fun)
 </script>
 
 <script class="test" type="mark8">
@@ -117,7 +176,7 @@ var runTests = function () {
   var results = _.map(inputs, function (input) {
     return {
       mark8: input,
-      js: mark8(input, 0, {"alert": 1, "smthng": 1}),
+      js: mark8(input, 0, {"alert": 1, "smthng": 1, "log": 1}),
       string_indent: string_indent(input),
       indent: indent(input)
     } 

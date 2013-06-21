@@ -60,6 +60,8 @@ var defineFunction = function (state, left, right) {
   var funcName = left[0] 
   var argNames = left.slice(1)
   var args = argNames.join(", ")
+  
+  /*
   var miniret = []
   for (var i = 0; i <  right.length; i++) {
     item = right[i];
@@ -74,17 +76,24 @@ var defineFunction = function (state, left, right) {
   } else if (miniret.length == 1) {
     right = miniret[0]
   }
+  */
+
+  if (!_.isArray(right[0])) {
+   right = [right]
+  }
 
   state.scope[funcName] = "here :)"
   _.each(argNames, function (name) {
     state.scope[name] = "here :)"
   })
   state = addCompiledLine(state, "\nvar " + funcName + " = function (" + args +") {")
-  if (_.isArray(right)) {
+  
+  //debugger
+  //if (_.isArray(right)) {
     state = addCompiledLine(state, mark8(right, state.givenIndentCount + 1, state.scope));
-  } else {
-    state = addCompiledLine(state, returning(state, right))
-  }
+  //} else {
+    //state = addCompiledLine(state, returning(state, right))
+  //}
   state = addCompiledLine(state, "}")
   return state;
 }
@@ -113,13 +122,13 @@ var doReturn = function(state, call) {
  console.log(call) 
   if (_.isArray(call)) {
     console.log(call.length + "---------") 
-    if (call.length == 1) {
+    if (call.length == 1 && _.isString(call[0])) {
       return maybeString(state, call[0])
     }
 
     if (!_.isArray(call[0]) && call[0] in macros) {
       return macros[call[0]](state, call)
-    } else if (!_.isArray(call[0]) && call[0] in state.scope){
+    } else if (!_.isArray(call[0]) && call[0] in state.scope) {
       ret.push(doReturn(state, call[0]))
       //ret.push(call[0])
       ret.push("(")

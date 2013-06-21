@@ -31,6 +31,9 @@ var indent = function (code) {
 
   var step = function (state) {
     var line = state.lines[i];
+    if (line == "") {
+      return state;
+    }
     var indent_count = get_indent_count(line)
     if (indent_count > state.indent_count) {
       state.expr_stack.push(state.expr) 
