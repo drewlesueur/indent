@@ -35,7 +35,7 @@ var string_indent = function (input) {
       i = info.i - 1
       var strLines = info.lines
       var generatedStr = strLines.join("\n")
-      newLines.push(line.substr(0, startString) + "= $(" + JSON.stringify(generatedStr).slice(1).slice(-0,-1) + ")")
+      newLines.push(line.substr(0, startString) + "= " + encodeURIComponent(generatedStr))
     } else {
       newLines.push(line)
     }

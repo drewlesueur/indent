@@ -49,7 +49,7 @@ var parens = function (code, linked_list) {
           state.mode = "string";
           state.string_parens = 0
         }
-      } else if (chr == ")") {
+      } else if (chr == ")" && state.stack.length) {
         state = close_word(state)
         var expr = state.expr
         state.expr = state.stack.pop()
@@ -67,7 +67,7 @@ var parens = function (code, linked_list) {
         if (state.string_parens < 0) {
 
           state.expr = state.stack.pop()
-          state.expr.push((state.word))
+          state.expr.push(encodeURIComponent(state.word))
 
           state.word = ""
           state.mode = "normal"

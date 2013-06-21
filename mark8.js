@@ -103,7 +103,7 @@ var maybeString = function (state, varName) {
   if (varName in state.scope) {
     return varName
   } else {
-    return "\"" + varName + "\"" // maybe only JSON.stringify here
+    return JSON.stringify(decodeURIComponent(varName)) // maybe only JSON.stringify here
   }
 
 } 
