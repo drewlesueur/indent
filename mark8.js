@@ -73,23 +73,6 @@ var defineFunction = function (state, left, right) {
   var argNames = left.slice(1)
   var args = argNames.join(", ")
   
-  /*
-  var miniret = []
-  for (var i = 0; i <  right.length; i++) {
-    item = right[i];
-    if (!_.isArray(item)) {
-      miniret.push(item)
-    } else {
-      break; 
-    }
-  }
-  if (miniret.length > 1) {
-    right = [miniret]
-  } else if (miniret.length == 1) {
-    right = miniret[0]
-  }
-  */
-
   if (!_.isArray(right[0])) {
    right = [right]
   }
@@ -98,14 +81,16 @@ var defineFunction = function (state, left, right) {
   _.each(argNames, function (name) {
     state.scope[name] = "here :)"
   })
-  state = addCompiledLine(state, "var " + funcName + " = function (" + args +") {")
-  
+
+
+  state = addCompiledLine(state, "var " + funcName + " = function (" + args +") {")  
   //debugger
   //if (_.isArray(right)) {
     state = addCompiledLine(state, mark8(right, state.givenIndentCount + 1, state.scope));
   //} else {
     //state = addCompiledLine(state, returning(state, right))
   //}
+
   state = addCompiledLine(state, "}")
   if (state.i == state.length - 1) {
     addCompiledLine(state, returning(state, funcName))
@@ -186,6 +171,7 @@ var mark8 = function (code, givenIndentCount, givenScope) {
   var parsed = _.isArray(code) ? code : indent(code)
   var length = parsed.length
   var state = {
+    preRet: [],
     ret: [],
     givenIndentCount: givenIndentCount,
     scope: givenScope,
