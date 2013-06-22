@@ -107,8 +107,10 @@ var defineFunction = function (state, left, right) {
 var returning = function (state, line) {
   if (false && state.givenIndentCount === 0) {
     return line
-  } else {
+  } else if (state.i == state.length - 1){
     return "return " + line
+  } else {
+    return line
   }
 }
 var maybeString = function (state, varName) {
@@ -177,11 +179,14 @@ var mark8 = function (code, givenIndentCount, givenScope) {
   var state = {
     ret: [],
     givenIndentCount: givenIndentCount,
-    scope: givenScope
+    scope: givenScope,
+    parsed: parsed,
+    length: length
   }
 
   for (var i = 0; i < length; i++) {
     var line = parsed[i];
+    state.i = i
     state = compileLine(line, state);
   }
   return state.ret.join("\n");
