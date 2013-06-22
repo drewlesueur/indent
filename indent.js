@@ -12,14 +12,9 @@ var indent = function (code) {
   var lines = code.split("\n")
   var state = {lines: lines, code: code, indent_count: 0, expr_stack: [], expr: [], indent_stack: []}
 
-    //geraldine  joaquine  
-
   var parse_line = function (line, indent_count) {
-    //return line.substr(indent_count).split(/ +/) // for now, soon parse parens and simple dash based multi line strings 
-   
     return parens(line.substr(indent_count))
   }
-
 
   pop_expr = function (indent_count, state) {
     while (indent_count < state.indent_count) {
@@ -65,20 +60,3 @@ if (typeof exports !== 'undefined') {
     exports = module.exports = indent;
   }
 }
-
-//console.log(parens("say test\nother say"))
-//console.log(parens("say test\nother say\n  yo world\n  yo stuff"))
-//console.log(parens("say test\nother say\n  yo world\n  yo stuff\nok"))
-//console.log(parens("say test\nother say\n  stuff here too\n  and here\n    but here\nback bere"))
-//console.log(parens("say test\nother say\n  stuff here too\n  and here\n    but here\n  also here\nback bere"))
-//
-console.log(indent("say test\nother say\n  yo world\n    here too\n  yo stuff"))
-//console.log(parens("say test\nother say\n  yo world\n    here too"))
-
-/*
-
-  mystirng = ###
-    this is a multi line string
-    is has
-
-*/

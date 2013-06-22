@@ -1,35 +1,11 @@
-var parens = function (code, linked_list) {
+var parens = function (code) {
 
   var is_array = function (a) {
     return Object.prototype.toString.call(a) === '[object Array]'
   }
-  var to_linked_list = function (list, index) {
-    index = index || 0
-    var item = list[index]
-    if (is_array(item)) {
-      item = to_linked_list(item, 0)
-    }
-
-    if (index + 1 >= list.length) {
-      return [item];
-    } else {
-      var next = to_linked_list(list, index + 1)
-      if (next.length == 1) { next = next[0] }
-      return [item, next] 
-    }
-  }
-
-  // for later?
-  var parse_word = function (word) {
-    if (word.indexOf("," != -1)) {
-      return word.split(",")
-      return word
-    }
-    return word;
-  }
 
   var i = 0
-  var state = {chr: "", word: "", stack: [], expr: [], mode: "normal"}
+  var state = {chr: "", word: "", stack: [], expr: []}
   var close_word = function (state) {
     if (state.word.length) {
       state.expr.push((state.word))
@@ -39,20 +15,18 @@ var parens = function (code, linked_list) {
   }
   var step = function (state) {
     var chr = state.chr
-    if (state.mode == "normal") {
-      if (chr == "(") {
-        state.stack.push(state.expr)
-        state.expr = []
-      } else if (chr == ")" && state.stack.length) {
-        state = close_word(state)
-        var expr = state.expr
-        state.expr = state.stack.pop()
-        state.expr.push(expr)
-      } else if (chr == " ") {
-        state = close_word(state)
-      } else {
-        state.word += chr
-      }
+    if (chr == "(") {
+      state.stack.push(state.expr)
+      state.expr = []
+    } else if (chr == ")" && state.stack.length) {
+      state = close_word(state)
+      var expr = state.expr
+      state.expr = state.stack.pop()
+      state.expr.push(expr)
+    } else if (chr == " ") {
+      state = close_word(state)
+    } else {
+      state.word += chr
     }
     return state;
   }
@@ -65,16 +39,5 @@ var parens = function (code, linked_list) {
   state.chr = " "
   state = step(state)
   
-  if (linked_list) {
-    return to_linked_list(state.expr)
-  } else {
-    return state.expr
-  }  
+  return state.expr
 }
-
-
-console.log(JSON.stringify(parens("hello world", true)))
-console.log(JSON.stringify(parens("(hello worldi)")))
-console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))")))
-console.log(JSON.stringify(parens("(hello (this is a) (cool message (what ever)))", true)))
-//console.log(JSON.stringify(parens("(name $(My name is drew lesueur))")))

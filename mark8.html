@@ -21,14 +21,22 @@ alert (area_of_circle 1)
 
 <pre id="o"></pre>
 <script>
+var log = function (x) {
+  return console.log(x)
+}
+var loop = function (x, f) {
+  return _.times(x, f)
+} 
 function run() {
   var code = document.getElementById("t").value;
   var result = mark8(code, 0, {
     "alert": 1,
     "document": 1,
     "window": 1,
+    "log": 1,
+    loop: 1
   });
   document.getElementById("o").innerHTML = result;
-  eval("(function () {" +result+"})()")
+  eval("console.log((function () {" +result+"})())")
 }
 </script>

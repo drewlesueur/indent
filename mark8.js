@@ -105,7 +105,7 @@ var defineFunction = function (state, left, right) {
 }
 
 var returning = function (state, line) {
-  if (state.givenIndentCount === 0) {
+  if (false && state.givenIndentCount === 0) {
     return line
   } else {
     return "return " + line
@@ -125,9 +125,7 @@ var maybeString = function (state, varName) {
 var doReturn = function(state, call) {
   //(say (hello world) yo
   var ret  = [];
- console.log(call) 
   if (_.isArray(call)) {
-    console.log(call.length + "---------") 
     if (call.length == 1 && _.isString(call[0])) {
       return maybeString(state, call[0])
     }
