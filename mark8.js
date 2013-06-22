@@ -35,7 +35,11 @@ var macros = {
     return doReturn(state, call[1]) + " + " + doReturn(state, call[2])
   },
   spaced: function (state, call) {
-    return doReturn(state, call[1]) + " + \" \" + " + doReturn(state, call[2])
+    var ret = []
+    for (var i = 1; i < call.length; i ++) {
+      ret.push(doReturn(state, call[i]))
+    }
+    return ret.join(" +  \" \" + ")
   },
   str: function (state, call) {
     return "\"" + call.slice(1).join(" ") + "\""
@@ -57,7 +61,9 @@ var addCompiledLine = function (state, line) {
 }
 
 var assign = function (state, words, call) {
-  state = addCompiledLine(state, "var " + words[0] + " = " + doReturn(state, call) + ";")
+  var varName = words[0];
+  var useVar = (varName in state.scope) ? "" : "var ";
+  state = addCompiledLine(state, useVar + words[0] + " = " + doReturn(state, call) + ";")
   state.scope[words[0]] = "here :)"
   return state
 }
@@ -92,7 +98,7 @@ var defineFunction = function (state, left, right) {
   _.each(argNames, function (name) {
     state.scope[name] = "here :)"
   })
-  state = addCompiledLine(state, "\nvar " + funcName + " = function (" + args +") {")
+  state = addCompiledLine(state, "var " + funcName + " = function (" + args +") {")
   
   //debugger
   //if (_.isArray(right)) {
@@ -101,6 +107,9 @@ var defineFunction = function (state, left, right) {
     //state = addCompiledLine(state, returning(state, right))
   //}
   state = addCompiledLine(state, "}")
+  if (state.i == state.length - 1) {
+    addCompiledLine(state, returning(state, funcName))
+  }
   return state;
 }
 
@@ -134,7 +143,7 @@ var doReturn = function(state, call) {
 
     if (!_.isArray(call[0]) && call[0] in macros) {
       return macros[call[0]](state, call)
-    } else if (!_.isArray(call[0]) && call[0] in state.scope) {
+    } else if ((!_.isArray(call[0]) && call[0] in state.scope) || _.isArray(call[0])) {
       ret.push(doReturn(state, call[0]))
       //ret.push(call[0])
       ret.push("(")
